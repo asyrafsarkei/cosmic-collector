@@ -5,16 +5,20 @@
     <title>The Test</title>
 </head>
 <body>
-    <h1>The - Architecture Test</h1>
+    <h1>The Cosmic Collector - Architecture Test</h1>
     
     <div id="status">Please Sign In to Begin Your Mission.</div>
     <button id="loginButton">Sign In with Google</button>
     <button id="logoutButton" style="display:none;">Sign Out</button>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script> 
+    <hr>
     
-    <script src="script.js"></script>
+    <div id="gameContainer" style="display:none;">
+        <h2>Current Mission: <span id="missionTitle"></span></h2>
+        <div id="challengeArea">
+            <p>Ready to start the Earth mission...</p>
+        </div>
+        <button id="startLevelButton">Begin Earth Mission</button>
+    </div>
 </body>
 </html>
