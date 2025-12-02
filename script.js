@@ -131,17 +131,13 @@ const startEarthLevel = (userData) => {
     } else {
         // If not completed, start the first challenge setup
         
-        // 🔥 CRITICAL FIX: The orphaned 
-
-[Image of the Water Cycle]
- tag has been removed.
+        // This is the clean HTML assignment, with NO orphaned code outside the backticks:
         challengeArea.innerHTML = `
             <p>Welcome, Commander! Your mission is to master the **Water Cycle**. Correctly answer the challenges to earn ${EARTH_LEVEL_DATA.rewardPoints} Fuel Points!</p>
             <p>Ready to begin?</p>
         `;
         startLevelButton.textContent = "Start Challenge 1";
         
-        // We'll define startChallengeOne next
         startLevelButton.onclick = startChallengeOne; 
     }
 };
@@ -203,5 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutButton.addEventListener('click', () => auth.signOut());
 });
 // ====================================================================
+
 
 
