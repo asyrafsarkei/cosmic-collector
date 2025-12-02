@@ -80,8 +80,8 @@ const loadUserData = async (userId) => {
 
 const signInWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-    //auth.signInWithPopup(provider).catch((error) => {
-    auth.signInWithRedirect(provider).catch((error) => {
+    auth.signInWithPopup(provider).catch((error) => {
+    //auth.signInWithRedirect(provider).catch((error) => {
         console.error("Login Error:", error.message);
     });
 };
@@ -111,3 +111,4 @@ auth.onAuthStateChanged((user) => {
 loginButton.addEventListener('click', signInWithGoogle);
 
 logoutButton.addEventListener('click', () => auth.signOut());
+
