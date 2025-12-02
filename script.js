@@ -110,7 +110,6 @@ const loadUserData = async (userId) => {
 
 
 // --- 2. GAME LOGIC FUNCTIONS ---
-
 /**
  * Starts the Earth Level, receiving userData directly.
  */
@@ -132,10 +131,14 @@ const startEarthLevel = (userData) => {
         startLevelButton.onclick = null; 
     } else {
         // If not completed, start the first challenge setup
-        challengeArea.innerHTML = `<p>Welcome, Commander! Your mission is to master the **Water Cycle** 
 
 [Image of the Water Cycle]
-. Correctly answer the challenges to earn ${EARTH_LEVEL_DATA.rewardPoints} Fuel Points!</p>`;
+
+        challengeArea.innerHTML = `
+            <p>Welcome, Commander! Your mission is to master the **Water Cycle**
+. Correctly answer the challenges to earn ${EARTH_LEVEL_DATA.rewardPoints} Fuel Points!</p>
+            <p>Ready to begin?</p>
+        `;
         startLevelButton.textContent = "Start Challenge 1";
         
         // We'll define startChallengeOne next
@@ -200,3 +203,4 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutButton.addEventListener('click', () => auth.signOut());
 });
 // ====================================================================
+
