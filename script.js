@@ -99,7 +99,6 @@ const loadUserData = async (userId) => {
     window.currentPlayerData = userData; 
 
     // FIX: Only update UI status if statusElement is defined.
-    // This resolves the timing conflict on first-time login.
     if (statusElement) {
         statusElement.textContent = statusElement.textContent.split(' Your current fuel:')[0]; 
         statusElement.textContent += ` Your current fuel: ${userData.fuelPoints}.`;
@@ -131,7 +130,7 @@ const startEarthLevel = (userData) => {
     } else {
         // If not completed, start the first challenge setup
         
-        // This is the clean HTML assignment, with NO orphaned code outside the backticks:
+        // This is the clean HTML assignment, with NO orphaned code or problematic characters:
         challengeArea.innerHTML = `
             <p>Welcome, Commander! Your mission is to master the **Water Cycle**. Correctly answer the challenges to earn ${EARTH_LEVEL_DATA.rewardPoints} Fuel Points!</p>
             <p>Ready to begin?</p>
@@ -199,6 +198,3 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutButton.addEventListener('click', () => auth.signOut());
 });
 // ====================================================================
-
-
-
