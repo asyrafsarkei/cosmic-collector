@@ -9,12 +9,13 @@ const firebaseConfig = {
 };
 // ====================================================================
 
-// Initialize Firebase Services (These are safe to run immediately)
+
+// Initialize Firebase Services (Safe to run immediately)
 const app = firebase.initializeApp(firebaseConfig);
 const db = app.firestore();    
 const auth = app.auth();        
 
-// --- NEW GLOBAL VARIABLES FOR ELEMENTS (Defined globally, but populated later)
+// --- GLOBAL ELEMENT REFERENCES (Populated inside DOMContentLoaded) ---
 let statusElement;
 let loginButton;
 let logoutButton;
@@ -23,37 +24,118 @@ let missionTitle;
 let challengeArea;
 let startLevelButton;
 
-// --- 1. DATA AND LEVEL DEFINITIONS (SAFE to run immediately) ---
-// ... (All your EARTH_LEVEL_DATA and defaultNewUserProgress objects remain here) ...
 
-const EARTH_LEVEL_DATA = { /* ... */ }; 
-const defaultNewUserProgress = { /* ... */ }; 
+// --- 1. DATA AND LEVEL DEFINITIONS ---
 
-// --- DATA HANDLING FUNCTIONS (Also safe to run immediately) ---
-const saveUserData = (userId, data) => { /* ... */ };
-const loadUserData = async (userId) => { /* ... */ };
+// --- EARTH LEVEL DATA ---
+const EARTH_LEVEL_DATA = {
+    levelId: "earth",
+    nextPlanetId: "moon", // The next destination after completing Earth
+    title: "Mission 1: The Water Cycle",
+    rewardCard: "rain_cycle",
+    rewardPoints: 100, // Total points for completing the level
+    challenges: [
+        {
+            type: "ordering",
+            question: "Order the 4 main stages of the Water Cycle:",
+            correctOrder: ["evaporation", "condensation", "precipitation", "collection"],
+            elements: [
+                { id: "evaporation", name: "Evaporation" },
+                { id: "condensation", name: "Condensation" },
+                { id: "precipitation", name: "Precipitation" },
+                { id: "collection", name: "Collection/Runoff" }
+            ]
+        },
+        {
+            type: "matching",
+            question: "Match the term to its definition (Question 2):",
+            correctAnswer: "Condensation is the process of water vapor turning into liquid droplets to form clouds.",
+            term: "Condensation"
+        }
+    ]
+};
+
+// The default progress for a new child astronaut.
+const defaultNewUserProgress = {
+    lastPlanetId: "earth",
+    fuelPoints: 0,
+    cardCollection: [],
+    totalProblemsSolved: 0,
+    unlockedPlanets: ["earth"] // User starts with Earth unlocked
+};
+
+/**
+ * Saves the user's current progress to Firestore.
+ */
+const saveUserData = (userId, data) => {
+    db.collection("users").doc(userId).set(data)
+        .then(() => {
+            console.log("SUCCESS: Progress saved!");
+        })
+        .catch((error) => {
+            console.error("ERROR: Could not save progress:", error);
+        });
+};
+
+/**
+ * Loads user progress or creates a default record if they are new.
+ * NOTE: This function is async and RETURNS the loaded or default data.
+ */
+const loadUserData = async (userId) => {
+    const userDocRef = db.collection("users").doc(userId);
+    const doc = await userDocRef.get();
+
+    let userData;
+
+    if (doc.exists) {
+        userData = doc.data();
+        console.log("SUCCESS: Loaded existing progress:", userData);
+    } else {
+        userData = defaultNewUserProgress;
+        saveUserData(userId, userData); 
+        console.log("SUCCESS: Created new user progress:", userData);
+    }
+    
+    // Store the data globally (still useful for other functions)
+    window.currentPlayerData = userData; 
+
+    // Update the UI status with current data
+    statusElement.textContent = statusElement.textContent.split(' Your current fuel:')[0]; 
+    statusElement.textContent += ` Your current fuel: ${userData.fuelPoints}.`;
+
+    //FIX 1: Explicitly RETURN the data to the .then() block
+    return userData;
+};
 
 
-// --- 2. GAME LOGIC FUNCTIONS (Also safe to run immediately) ---
-// NOTE: These functions will use the globally defined variables above once they are populated.
+// --- 2. GAME LOGIC FUNCTIONS ---
 
-const startEarthLevel = () => {
+/**
+ * Starts the Earth Level, receiving userData directly.
+ */
+const startEarthLevel = (userData) => { // 🔥 FIX 2: Accepts userData as argument
     // 1. Show the game UI
     gameContainer.style.display = 'block';
-    // ... (rest of startEarthLevel logic remains the same) ...
+    
+    // 2. Load the level data
     missionTitle.textContent = EARTH_LEVEL_DATA.title;
-    const isCompleted = window.currentPlayerData.unlockedPlanets.includes(EARTH_LEVEL_DATA.nextPlanetId);
+    
+    // 3. Check if the user has already completed this level
+    const isCompleted = userData.unlockedPlanets.includes(EARTH_LEVEL_DATA.nextPlanetId); // 🔥 FIX 3: Uses argument userData
     
     if (isCompleted) {
         challengeArea.innerHTML = "<p>✅ **Mission Complete!** You have already explored Earth. Head to the Moon next!</p>";
         startLevelButton.textContent = "Go to Planet Map";
         startLevelButton.onclick = null; 
     } else {
+        // If not completed, start the first challenge setup
         challengeArea.innerHTML = `<p>Welcome, Commander! Your mission is to master the **Water Cycle** 
 
 [Image of the Water Cycle]
 . Correctly answer the challenges to earn ${EARTH_LEVEL_DATA.rewardPoints} Fuel Points!</p>`;
         startLevelButton.textContent = "Start Challenge 1";
+        
+        // We'll define startChallengeOne next
         startLevelButton.onclick = startChallengeOne; 
     }
 };
@@ -71,7 +153,7 @@ const signInWithGoogle = () => {
 
 
 // ====================================================================
-// 🔥 CRITICAL FIX: WAIT FOR THE HTML TO LOAD BEFORE FINDING ELEMENTS!
+// FIX: WAIT FOR THE HTML TO LOAD BEFORE FINDING ELEMENTS
 // ====================================================================
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -94,9 +176,9 @@ document.addEventListener('DOMContentLoaded', () => {
             loginButton.style.display = 'none';
             logoutButton.style.display = 'block';
             
-            // Wait for loadUserData to complete before starting the game
-            loadUserData(user.uid).then(() => {
-                startEarthLevel(); 
+            // Wait for loadUserData to complete, and RECEIVE the data
+            loadUserData(user.uid).then((data) => {
+                startEarthLevel(data); // Pass the loaded data
             });
 
         } else {
@@ -104,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
             statusElement.textContent = "Please Sign In to Begin Your Mission.";
             loginButton.style.display = 'block';
             logoutButton.style.display = 'none';
-            window.currentPlayerData = null; // Clear data when logged out
+            window.currentPlayerData = null; 
             
             // Hide game container when logged out
             if (gameContainer) {
