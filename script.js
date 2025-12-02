@@ -15,7 +15,7 @@ const app = firebase.initializeApp(firebaseConfig);
 const db = app.firestore();    
 const auth = app.auth();        
 
-// --- GLOBAL ELEMENT REFERENCES (Populated inside DOMContentLoaded) ---
+// --- GLOBAL ELEMENT REFERENCES (Declared globally, defined inside DOMContentLoaded) ---
 let statusElement;
 let loginButton;
 let logoutButton;
@@ -24,16 +24,15 @@ let missionTitle;
 let challengeArea;
 let startLevelButton;
 
-
 // --- 1. DATA AND LEVEL DEFINITIONS ---
 
 // --- EARTH LEVEL DATA ---
 const EARTH_LEVEL_DATA = {
     levelId: "earth",
-    nextPlanetId: "moon", // The next destination after completing Earth
+    nextPlanetId: "moon", 
     title: "Mission 1: The Water Cycle",
     rewardCard: "rain_cycle",
-    rewardPoints: 100, // Total points for completing the level
+    rewardPoints: 100, 
     challenges: [
         {
             type: "ordering",
@@ -61,7 +60,7 @@ const defaultNewUserProgress = {
     fuelPoints: 0,
     cardCollection: [],
     totalProblemsSolved: 0,
-    unlockedPlanets: ["earth"] // User starts with Earth unlocked
+    unlockedPlanets: ["earth"] 
 };
 
 /**
@@ -96,14 +95,16 @@ const loadUserData = async (userId) => {
         console.log("SUCCESS: Created new user progress:", userData);
     }
     
-    // Store the data globally (still useful for other functions)
+    // Store the data globally
     window.currentPlayerData = userData; 
 
-    // Update the UI status with current data
-    statusElement.textContent = statusElement.textContent.split(' Your current fuel:')[0]; 
-    statusElement.textContent += ` Your current fuel: ${userData.fuelPoints}.`;
+    // FIX: Only update UI status if statusElement is defined.
+    // This resolves the timing conflict on first-time login.
+    if (statusElement) {
+        statusElement.textContent = statusElement.textContent.split(' Your current fuel:')[0]; 
+        statusElement.textContent += ` Your current fuel: ${userData.fuelPoints}.`;
+    }
 
-    //FIX 1: Explicitly RETURN the data to the .then() block
     return userData;
 };
 
@@ -113,7 +114,9 @@ const loadUserData = async (userId) => {
 /**
  * Starts the Earth Level, receiving userData directly.
  */
-const startEarthLevel = (userData) => { // 🔥 FIX 2: Accepts userData as argument
+const startEarthLevel = (userData) => { 
+    // This is now SAFE because loadUserData returned the data (userData is not null)
+    
     // 1. Show the game UI
     gameContainer.style.display = 'block';
     
@@ -121,7 +124,7 @@ const startEarthLevel = (userData) => { // 🔥 FIX 2: Accepts userData as argum
     missionTitle.textContent = EARTH_LEVEL_DATA.title;
     
     // 3. Check if the user has already completed this level
-    const isCompleted = userData.unlockedPlanets.includes(EARTH_LEVEL_DATA.nextPlanetId); // 🔥 FIX 3: Uses argument userData
+    const isCompleted = userData.unlockedPlanets.includes(EARTH_LEVEL_DATA.nextPlanetId);
     
     if (isCompleted) {
         challengeArea.innerHTML = "<p>✅ **Mission Complete!** You have already explored Earth. Head to the Moon next!</p>";
@@ -151,9 +154,8 @@ const signInWithGoogle = () => {
     });
 };
 
-
 // ====================================================================
-// FIX: WAIT FOR THE HTML TO LOAD BEFORE FINDING ELEMENTS
+// FIX: ALL DOM-RELATED CODE IS INSIDE THIS LISTENER
 // ====================================================================
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -161,8 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
     statusElement = document.getElementById('status');
     loginButton = document.getElementById('loginButton');
     logoutButton = document.getElementById('logoutButton');
-
-    // --- NEW GAME UI ELEMENTS ---
     gameContainer = document.getElementById('gameContainer');
     missionTitle = document.getElementById('missionTitle');
     challengeArea = document.getElementById('challengeArea');
