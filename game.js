@@ -51,17 +51,13 @@ async function loadDataAndStart(userId) {
     const docRef = db.collection("users").doc(userId);
     let userData;
 
-    // 🔥 IMMEDIATE FEEDBACK: Tell the user we are trying to connect.
-    playerStatus.textContent += ` | Connecting to Mission Database...`;
-    
     try {
-        // This is the line that might time out (up to 10 seconds)
         const doc = await docRef.get();
         
         if (doc.exists) {
             userData = doc.data();
         } else {
-            // Create Default Data and set it
+            // Create Default Data
             userData = { 
                 fuelPoints: 0, 
                 unlockedPlanets: ["earth"] 
@@ -69,30 +65,20 @@ async function loadDataAndStart(userId) {
             await docRef.set(userData);
         }
 
-        // SUCCESS: Update UI with loaded data
-        playerStatus.textContent = playerStatus.textContent.replace(' | Connecting to Mission Database...', '');
+        // Update UI with loaded data
         playerStatus.textContent += ` | Fuel: ${userData.fuelPoints}`;
         
-        // START THE LEVEL UI
+        // START THE LEVEL UI (This runs ONLY on success)
         startGameUI(userData);
 
     } catch (error) {
-        // FAILURE: Handle the error gracefully
         console.error("Firestore Load Error:", error);
-        
-        // Use default data to ensure the animations/challenge loads
-        userData = { fuelPoints: 0, unlockedPlanets: ["earth"] };
-
-        playerStatus.textContent = playerStatus.textContent.replace(' | Connecting to Mission Database...', '');
-        playerStatus.textContent += " | ❌ ERROR: Offline Mode (Game Data Defaulted)";
-
-        // START THE LEVEL UI with default data
-        startGameUI(userData);
+        playerStatus.textContent += " | ❌ Offline Mode";
+        // Start game with default data if offline so user sees something
+        startGameUI({ fuelPoints: 0, unlockedPlanets: ["earth"] }); 
     }
 }
 
-// Global variable to hold the loop ID for clearing
-let currentAnimationInterval;
 // --- GAME UI FUNCTIONS ---
 function startGameUI(userData) {
     // Show the game container
@@ -107,8 +93,8 @@ function startGameUI(userData) {
         // Show Interactive Intro
         challengeContainer.innerHTML = `
             <div style="text-align:center;">
-                <p>Commander! Let's examine each step of the water cycle closely.</p>
-                <p><strong>Click a button below</strong> to see that single process loop 5 times!</p>
+                <p>Commander! We need to understand how water moves on Earth.</p>
+                <p><strong>Tap the Orange Buttons</strong> below to see the cycle in action!</p>
             </div>
 
             <div class="scene-container" id="waterScene">
@@ -119,10 +105,9 @@ function startGameUI(userData) {
                 </div>
 
             <div style="text-align:center;">
-                <button class="cycle-btn" onclick="startLoop('evaporation')" id="btnEvap">1. Evaporation (Loop) 🔥</button>
-                <button class="cycle-btn" onclick="startLoop('condensation')" id="btnCond">2. Condensation (Loop) ☁️</button>
-                <button class="cycle-btn" onclick="startLoop('precipitation')" id="btnPrecip">3. Precipitation (Loop) 🌧️</button>
-                <button class="cycle-btn" onclick="stopLoop()" style="background-color: #f44336; margin-top: 10px;">🛑 Stop Animation</button>
+                <button class="cycle-btn" onclick="animateEvaporation()">1. Evaporation 🔥</button>
+                <button class="cycle-btn" onclick="animateCondensation()">2. Condensation ☁️</button>
+                <button class="cycle-btn" onclick="animatePrecipitation()">3. Precipitation 🌧️</button>
             </div>
             
             <p id="cycleStatus" style="text-align:center; font-style:italic; height: 30px;">Waiting for input...</p>
@@ -130,121 +115,13 @@ function startGameUI(userData) {
         
         actionButton.textContent = "I'm Ready! Start Challenge";
         
-        // Define what happens when clicking Start Challenge
+        // Define what happens when clicking Start
         actionButton.onclick = () => {
             startChallengeOne();
         };
     }
 }
-// Global variable to hold the loop ID for clearing
-let currentAnimationInterval;
 
-// --- LOOP CONTROLS ---
-
-function stopLoop() {
-    if (currentAnimationInterval) {
-        clearInterval(currentAnimationInterval);
-        document.getElementById('cycleStatus').textContent = "Animation stopped.";
-        currentAnimationInterval = null;
-        // Re-enable all buttons
-        document.getElementById('btnEvap').disabled = false;
-        document.getElementById('btnCond').disabled = false;
-        document.getElementById('btnPrecip').disabled = false;
-    }
-}
-
-function startLoop(animationType) {
-    // 1. Stop any currently running loop
-    stopLoop(); 
-    
-    // 2. Disable buttons and set status
-    document.getElementById('btnEvap').disabled = true;
-    document.getElementById('btnCond').disabled = true;
-    document.getElementById('btnPrecip').disabled = true;
-    document.getElementById('cycleStatus').textContent = `Starting ${animationType} loop...`;
-
-    const loopCount = 5;
-    let counter = 0;
-    let animationFunction;
-    let delay; // Time to wait before restarting the loop
-
-    switch (animationType) {
-        case 'evaporation':
-            animationFunction = animateEvaporation;
-            delay = 3000; // 3 seconds (longer than the 2.6s animation)
-            break;
-        case 'condensation':
-            animationFunction = animateCondensation;
-            delay = 2500; // 2.5 seconds (longer than the 2.0s animation)
-            break;
-        case 'precipitation':
-            animationFunction = animatePrecipitation;
-            delay = 1800; // 1.8 seconds (longer than the 1.6s animation)
-            break;
-        default:
-            return;
-    }
-    
-    // 3. Define the repeating function
-    const loopAction = () => {
-        if (counter >= loopCount) {
-            stopLoop(); // Finished 5 loops
-            document.getElementById('cycleStatus').textContent = `${animationType} loop finished 5 times!`;
-            return;
-        }
-
-        // Run the animation
-        animationFunction(); 
-        counter++;
-    };
-
-    // 4. Start the loop
-    loopAction(); // Run the first time immediately
-    currentAnimationInterval = setInterval(loopAction, delay);
-}
-// --- CYCLE SEQUENCER ---
-function startWaterCycleLoop() {
-    const loopButton = document.getElementById('loopButton');
-    loopButton.disabled = true; // Prevent re-clicking during the loop
-    loopButton.textContent = "🔁 Cycle Running...";
-
-    const totalLoops = 10;
-    let currentLoop = 0;
-
-    // The function that runs one full cycle
-    const runOneCycle = () => {
-        if (currentLoop >= totalLoops) {
-            loopButton.disabled = false;
-            loopButton.textContent = "✅ Cycle Complete!";
-            document.getElementById('cycleStatus').textContent = "The cycle finished 10 times! Ready for the challenge.";
-            return;
-        }
-
-        currentLoop++;
-        document.getElementById('cycleStatus').textContent = `Starting Loop ${currentLoop} of ${totalLoops}...`;
-
-        // 1. EVAPORATION (Takes ~2.6s)
-        animateEvaporation();
-
-        // 2. CONDENSATION (Starts after 3s delay)
-        setTimeout(() => {
-            animateCondensation();
-        }, 3000); // Wait 3.0s (longer than 2.6s evaporation)
-
-        // 3. PRECIPITATION (Starts after 5.5s delay)
-        setTimeout(() => {
-            animatePrecipitation();
-        }, 5500); // Wait 5.5s (3.0s + 2.0s condensation + buffer)
-
-        // 4. REPEAT (Starts after 7.5s delay)
-        setTimeout(() => {
-            runOneCycle(); // Calls itself to start the next loop
-        }, 7500); // Total cycle time is ~7.5 seconds
-    };
-
-    // Start the first cycle
-    runOneCycle();
-}
 // --- ANIMATION HELPER FUNCTIONS ---
 // These make the emojis move on the screen
 
