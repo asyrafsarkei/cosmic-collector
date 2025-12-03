@@ -185,24 +185,31 @@ window.animateCondensation = function() {
 
 window.animatePrecipitation = function() {
     const scene = document.getElementById('waterScene');
-    document.getElementById('cycleStatus').textContent = "The clouds get heavy and water falls as Rain!";
+    document.getElementById('cycleStatus').textContent = "The clouds are too heavy! RAIN is pouring down, carried by the wind! ⛈️";
     
-    // Create falling drops
-    for(let i=0; i<3; i++) {
+    const dropCount = 10; // More drops for a shower effect
+
+    for(let i = 0; i < dropCount; i++) {
+        // Stagger the drops to fall sequentially over a short time
         setTimeout(() => {
             const drop = document.createElement('div');
             drop.textContent = '💧';
-            drop.className = 'water-drop';
-            drop.style.top = '70px';
-            drop.style.right = (80 + (i*20)) + 'px'; // Stagger position
+            
+            // 🔥 Use the new 'raining' class to trigger the wind animation
+            drop.className = 'water-drop raining'; 
+            
+            // Randomize starting horizontal position
+            const startRight = Math.floor(Math.random() * 80) + 10; // Between 10px and 90px from the right
+            
+            drop.style.top = '70px'; // Start under the cloud
+            drop.style.right = startRight + 'px'; 
             scene.appendChild(drop);
 
-            setTimeout(() => {
-                drop.style.top = '250px'; // Fall down
-            }, 50);
+            // Clean up element after the animation is finished
+            // The animation itself takes 1.5s, so we remove it shortly after
+            setTimeout(() => { drop.remove(); }, 1600); 
 
-            setTimeout(() => { drop.remove(); }, 2000);
-        }, i * 300); // Stagger timing
+        }, i * 150); // Stagger the start time every 150ms to create a shower effect
     }
 }
 
