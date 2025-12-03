@@ -28,8 +28,20 @@
             border: 2px solid #333;
         }
 
-        .sun { font-size: 60px; position: absolute; top: 20px; left: 20px; cursor: pointer; transition: transform 0.5s; }
-        .sun:hover { transform: scale(1.2) rotate(180deg); }
+        .sun { 
+            font-size: 60px; 
+            position: absolute; 
+            top: 20px; 
+            left: 20px; 
+            cursor: pointer; 
+            
+            /* 🔥 Apply the new animations here */
+            animation: 
+                sun-pulse 4s linear infinite, /* Pulse every 4 seconds */
+                sun-spin 12s linear infinite; /* Spin slowly over 12 seconds */
+        }
+        /* Remove the hover effect since it conflicts with the continuous animation */
+        /* .sun:hover { transform: scale(1.2) rotate(180deg); } */
 
         .cloud { font-size: 60px; position: absolute; top: 30px; right: 50px; opacity: 0.8; transition: opacity 1s; animation: drift 10s linear infinite alternate;}
         
@@ -66,6 +78,15 @@
                 transform: translateX(30px) rotate(15deg); /* Moves 30px right and tilts */
                 opacity: 0; 
             }
+        }
+        @keyframes sun-pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes sun-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .cycle-btn {
