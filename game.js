@@ -49,43 +49,76 @@ logoutButton.addEventListener('click', () => {
 // --- DATA LOADING ---
 async function loadDataAndStart(userId) {
     const docRef = db.collection("users").doc(userId);
-    const doc = await docRef.get();
-    
     let userData;
 
-    if (doc.exists) {
-        userData = doc.data();
-    } else {
-        // Create Default Data
-        userData = { 
-            fuelPoints: 0, 
-            unlockedPlanets: ["earth"] 
-        };
-        await docRef.set(userData);
-    }
+    try {
+        const doc = await docRef.get();
+        
+        if (doc.exists) {
+            userData = doc.data();
+        } else {
+            // Create Default Data
+            userData = { 
+                fuelPoints: 0, 
+                unlockedPlanets: ["earth"] 
+            };
+            await docRef.set(userData);
+        }
 
-    // Update UI
-    playerStatus.textContent += ` | Fuel: ${userData.fuelPoints}`;
-    
-    // START THE LEVEL UI
-    startGameUI(userData);
+        // Update UI with loaded data
+        playerStatus.textContent += ` | Fuel: ${userData.fuelPoints}`;
+        
+        // START THE LEVEL UI (This runs ONLY on success)
+        startGameUI(userData);
+
+    } catch (error) {
+        console.error("Firestore Load Error:", error);
+        playerStatus.textContent += " | ❌ Offline Mode";
+        // Start game with default data if offline so user sees something
+        startGameUI({ fuelPoints: 0, unlockedPlanets: ["earth"] }); 
+    }
 }
 
-// --- GAME UI ---
+// --- GAME UI FUNCTIONS ---
 function startGameUI(userData) {
+    // Show the game container
     gameArea.style.display = "block";
     missionTitle.textContent = EARTH_LEVEL.title;
 
+    // Check if user has finished this planet
     if (userData.unlockedPlanets.includes(EARTH_LEVEL.next)) {
-        challengeContainer.innerHTML = "<p>✅ Mission Complete!</p>";
+        challengeContainer.innerHTML = "<p>✅ Mission Complete! You've mastered the Water Cycle.</p>";
         actionButton.style.display = "none";
     } else {
+        // Show Intro
         challengeContainer.innerHTML = `
-            <p>Welcome! Master the Water Cycle to earn fuel.</p>
+            <p>Welcome! Your mission is to master the <strong>Water Cycle</strong>.</p>
+            <p>Look at this diagram to understand how water moves on Earth:</p>
+            
+
+[Image of the Water Cycle]
+
+            <p>Earn ${EARTH_LEVEL.points} fuel points by completing the challenge.</p>
         `;
         actionButton.textContent = "Start Challenge 1";
+        
+        // Define what happens when clicking Start
         actionButton.onclick = () => {
-            challengeContainer.innerHTML = "<h3>Challenge 1 Started!</h3>";
+            startChallengeOne();
         };
     }
+}
+
+function startChallengeOne() {
+    // Update the UI for the actual question
+    challengeContainer.innerHTML = `
+        <div class="challenge-box">
+            <h3>Question 1: Ordering</h3>
+            <p>Put the water cycle stages in order (Evaporation -> Condensation -> Precipitation -> Collection)</p>
+            <p><em>(Drag and Drop Game coming soon...)</em></p>
+        </div>
+    `;
+    
+    // Hide the start button since the game has started
+    actionButton.style.display = "none"; 
 }
