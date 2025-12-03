@@ -37,23 +37,19 @@
         }
         #river {
             position: absolute;
-            /* Position river to flow down the mountain's slope */
-            /* Adjusted right position to flow from the new peak */
             top: 100px; 
-            right: 170px; /* Aligned with the new peak */
-            width: 100px; 
+            right: 170px;
+            width: 10px; /* Start narrow */
             height: 150px;
             background: transparent; 
             z-index: 15;
             overflow: hidden;
             
-            /* River Shape (Trapezoid from far to near) */
-            clip-path: polygon(
-                45% 0%,       /* Top Left */
-                55% 0%,       /* Top Right */
-                80% 100%,     /* Bottom Right (wider) */
-                20% 100%      /* Bottom Left (wider) */
-            );
+            /* 🔥 KEY CHANGE: Transition from narrow to wide using scale and transform */
+            transform-origin: top; /* Ensures scaling happens from the mountain source */
+            transform: scaleX(3); /* Makes the bottom end 3 times wider than the top */
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 20px;
         }
         /* Water Flow Animation Element (The moving texture) */
         #river::after {
@@ -70,7 +66,7 @@
                 #00BFFF 20px, 
                 #00BFFF 40px
             );
-            animation: river-flow 3s linear infinite; 
+            animation: river-flow 1.5s linear infinite; 
         }
         h2#missionTitle { color: #006064; text-align: center; }
 
@@ -153,7 +149,7 @@
                 transform: translateY(0);
             }
             to {
-                transform: translateY(-50%); /* Move the background texture up to simulate flow down */
+                transform: translateY(100px); /* Move the background texture up to simulate flow down */
             }
         }
 
