@@ -99,7 +99,9 @@ function startGameUI(userData) {
 
             <div class="scene-container" id="waterScene">
                 <div class="sun">☀️</div>
-                <div class="cloud" id="cloudEmoji" style="opacity:0.3;">☁️</div>
+                <div class="cloud" id="cloudMain" style="opacity:0.3; top: 30px; right: 50px; font-size: 60px;">☁️</div>
+                <div class="cloud" id="cloudSmall1" style="opacity:0.2; top: 80px; left: 150px; font-size: 30px;">☁️</div>
+                <div class="cloud" id="cloudSmall2" style="opacity:0.2; top: 50px; right: 10px; font-size: 40px;">☁️</div>
                 </div>
 
             <div style="text-align:center;">
@@ -125,33 +127,60 @@ function startGameUI(userData) {
 
 window.animateEvaporation = function() {
     const scene = document.getElementById('waterScene');
-    document.getElementById('cycleStatus').textContent = "The Sun warms the ocean, turning water into vapor (Gas)!";
+    document.getElementById('cycleStatus').textContent = "The Sun warms the ocean, turning water into vapor (Gas)! Look at all the water rising! 💧🔥";
     
-    // Create a rising drop
-    const drop = document.createElement('div');
-    drop.textContent = '💧';
-    drop.className = 'water-drop';
-    drop.style.bottom = '20px';
-    drop.style.left = '30%';
-    scene.appendChild(drop);
+    // Use a loop to create and animate three drops
+    for(let i = 0; i < 3; i++) {
+        // Stagger the drops to start slightly apart in time and position
+        setTimeout(() => {
+            const drop = document.createElement('div');
+            drop.textContent = '💧';
+            drop.className = 'water-drop';
+            
+            // Randomize starting position slightly
+            const startX = 25 + (i * 10); // Start drops near 25% to 45% horizontal position
+            drop.style.bottom = '20px';
+            drop.style.left = startX + '%';
+            scene.appendChild(drop);
 
-    // Force browser to realize element is there before moving it
-    setTimeout(() => {
-        drop.style.bottom = '220px'; // Move up
-        drop.style.left = '50%';
-        drop.style.opacity = '0';    // Fade out
-    }, 50);
+            // Force browser to realize element is there before moving it
+            setTimeout(() => {
+                // Animate to a different, higher position
+                drop.style.bottom = '220px'; 
+                drop.style.left = (startX + 5) + '%';
+                drop.style.opacity = '0';    // Fade out
+                drop.style.transitionDuration = '2.5s'; // Make rise slightly longer
+            }, 50);
 
-    // Clean up element after animation
-    setTimeout(() => { drop.remove(); }, 2000);
+            // Clean up element after animation
+            setTimeout(() => { drop.remove(); }, 2600);
+        }, i * 400); // Stagger the start time by 400ms
+    }
 }
 
 window.animateCondensation = function() {
-    document.getElementById('cycleStatus').textContent = "Water vapor cools down in the sky and forms Clouds!";
-    const cloud = document.getElementById('cloudEmoji');
-    cloud.style.opacity = '1';
-    cloud.style.transform = "scale(1.5)";
-    setTimeout(() => { cloud.style.transform = "scale(1)"; }, 500);
+    document.getElementById('cycleStatus').textContent = "Water vapor cools down high up and gathers to form BIGGER CLOUDS! ☁️☁️☁️";
+    
+    const cloudMain = document.getElementById('cloudMain');
+    const cloudSmall1 = document.getElementById('cloudSmall1');
+    const cloudSmall2 = document.getElementById('cloudSmall2');
+
+    // Make main cloud grow and darken
+    cloudMain.style.opacity = '1';
+    cloudMain.style.transform = "scale(2.0)"; // Grow significantly
+    cloudMain.style.color = "#bbbbbb"; // Change color slightly (visual cue)
+
+    // Make small clouds join (move toward the main cloud and disappear)
+    cloudSmall1.style.opacity = '0';
+    cloudSmall2.style.opacity = '0';
+    cloudSmall1.style.transitionDuration = '1.5s';
+    cloudSmall2.style.transitionDuration = '1.5s';
+
+    // Reset after animation
+    setTimeout(() => { 
+        cloudMain.style.transform = "scale(1.0)"; 
+        cloudMain.style.color = ""; 
+    }, 2000); // 2 seconds to show the growth
 }
 
 window.animatePrecipitation = function() {
