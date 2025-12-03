@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mission 1: Earth</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #gameArea { border: 2px solid #333; padding: 20px; margin-top: 20px; display: none; }
+    </style>
+</head>
+<body>
+    <div style="display: flex; justify-content: space-between;">
+        <span id="playerStatus">Loading profile...</span>
+        <button id="logoutButton">Abort Mission (Log Out)</button>
+    </div>
+    <hr>
+
+    <div id="gameArea">
+        <h2 id="missionTitle">Mission Loading...</h2>
+        <div id="challengeContainer"></div>
+        <br>
+        <button id="actionButton">Start</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script src="game.js"></script>
+</body>
+</html>
