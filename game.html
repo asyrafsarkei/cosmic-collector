@@ -31,7 +31,7 @@
         .sun { font-size: 60px; position: absolute; top: 20px; left: 20px; cursor: pointer; transition: transform 0.5s; }
         .sun:hover { transform: scale(1.2) rotate(180deg); }
 
-        .cloud { font-size: 60px; position: absolute; top: 30px; right: 50px; opacity: 0.8; transition: opacity 1s; }
+        .cloud { font-size: 60px; position: absolute; top: 30px; right: 50px; opacity: 0.8; transition: opacity 1s; animation: drift 10s linear infinite alternate;}
         
         .water-drop {
             font-size: 24px;
@@ -44,10 +44,13 @@
             0% { bottom: 20px; left: 20%; opacity: 1; }
             100% { bottom: 220px; left: 30%; opacity: 0; }
         }
-
         @keyframes fall {
             0% { top: 70px; right: 80px; opacity: 1; }
             100% { top: 250px; right: 80px; opacity: 0; }
+        }
+        @keyframes drift {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(100px); } /* Move 100px to the right */
         }
 
         .cycle-btn {
