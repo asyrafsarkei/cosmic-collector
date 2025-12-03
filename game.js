@@ -90,22 +90,90 @@ function startGameUI(userData) {
         challengeContainer.innerHTML = "<p>✅ Mission Complete! You've mastered the Water Cycle.</p>";
         actionButton.style.display = "none";
     } else {
-        // Show Intro
+        // Show Interactive Intro
         challengeContainer.innerHTML = `
-            <p>Welcome! Your mission is to master the <strong>Water Cycle</strong>.</p>
-            <p>Look at this diagram to understand how water moves on Earth:</p>
+            <div style="text-align:center;">
+                <p>Commander! We need to understand how water moves on Earth.</p>
+                <p><strong>Tap the Orange Buttons</strong> below to see the cycle in action!</p>
+            </div>
+
+            <div class="scene-container" id="waterScene">
+                <div class="sun">☀️</div>
+                <div class="cloud" id="cloudEmoji" style="opacity:0.3;">☁️</div>
+                </div>
+
+            <div style="text-align:center;">
+                <button class="cycle-btn" onclick="animateEvaporation()">1. Evaporation 🔥</button>
+                <button class="cycle-btn" onclick="animateCondensation()">2. Condensation ☁️</button>
+                <button class="cycle-btn" onclick="animatePrecipitation()">3. Precipitation 🌧️</button>
+            </div>
             
-
-[Image of the Water Cycle]
-
-            <p>Earn ${EARTH_LEVEL.points} fuel points by completing the challenge.</p>
+            <p id="cycleStatus" style="text-align:center; font-style:italic; height: 30px;">Waiting for input...</p>
         `;
-        actionButton.textContent = "Start Challenge 1";
+        
+        actionButton.textContent = "I'm Ready! Start Challenge";
         
         // Define what happens when clicking Start
         actionButton.onclick = () => {
             startChallengeOne();
         };
+    }
+}
+
+// --- ANIMATION HELPER FUNCTIONS ---
+// These make the emojis move on the screen
+
+window.animateEvaporation = function() {
+    const scene = document.getElementById('waterScene');
+    document.getElementById('cycleStatus').textContent = "The Sun warms the ocean, turning water into vapor (Gas)!";
+    
+    // Create a rising drop
+    const drop = document.createElement('div');
+    drop.textContent = '💧';
+    drop.className = 'water-drop';
+    drop.style.bottom = '20px';
+    drop.style.left = '30%';
+    scene.appendChild(drop);
+
+    // Force browser to realize element is there before moving it
+    setTimeout(() => {
+        drop.style.bottom = '220px'; // Move up
+        drop.style.left = '50%';
+        drop.style.opacity = '0';    // Fade out
+    }, 50);
+
+    // Clean up element after animation
+    setTimeout(() => { drop.remove(); }, 2000);
+}
+
+window.animateCondensation = function() {
+    document.getElementById('cycleStatus').textContent = "Water vapor cools down in the sky and forms Clouds!";
+    const cloud = document.getElementById('cloudEmoji');
+    cloud.style.opacity = '1';
+    cloud.style.transform = "scale(1.5)";
+    setTimeout(() => { cloud.style.transform = "scale(1)"; }, 500);
+}
+
+window.animatePrecipitation = function() {
+    const scene = document.getElementById('waterScene');
+    document.getElementById('cycleStatus').textContent = "The clouds get heavy and water falls as Rain!";
+    
+    // Create falling drops
+    for(let i=0; i<3; i++) {
+        setTimeout(() => {
+            const drop = document.createElement('div');
+            drop.textContent = '💧';
+            drop.className = 'water-drop';
+            drop.style.top = '70px';
+            drop.style.right = (80 + (i*20)) + 'px'; // Stagger position
+            scene.appendChild(drop);
+
+            setTimeout(() => {
+                drop.style.top = '250px'; // Fall down
+            }, 50);
+
+            setTimeout(() => { drop.remove(); }, 2000);
+        }, i * 300); // Stagger timing
     }
 }
 
