@@ -51,13 +51,17 @@ async function loadDataAndStart(userId) {
     const docRef = db.collection("users").doc(userId);
     let userData;
 
+    // 🔥 IMMEDIATE FEEDBACK: Tell the user we are trying to connect.
+    playerStatus.textContent += ` | Connecting to Mission Database...`;
+    
     try {
+        // This is the line that might time out (up to 10 seconds)
         const doc = await docRef.get();
         
         if (doc.exists) {
             userData = doc.data();
         } else {
-            // Create Default Data
+            // Create Default Data and set it
             userData = { 
                 fuelPoints: 0, 
                 unlockedPlanets: ["earth"] 
@@ -65,17 +69,25 @@ async function loadDataAndStart(userId) {
             await docRef.set(userData);
         }
 
-        // Update UI with loaded data
+        // SUCCESS: Update UI with loaded data
+        playerStatus.textContent = playerStatus.textContent.replace(' | Connecting to Mission Database...', '');
         playerStatus.textContent += ` | Fuel: ${userData.fuelPoints}`;
         
-        // START THE LEVEL UI (This runs ONLY on success)
+        // START THE LEVEL UI
         startGameUI(userData);
 
     } catch (error) {
+        // FAILURE: Handle the error gracefully
         console.error("Firestore Load Error:", error);
-        playerStatus.textContent += " | ❌ Offline Mode";
-        // Start game with default data if offline so user sees something
-        startGameUI({ fuelPoints: 0, unlockedPlanets: ["earth"] }); 
+        
+        // Use default data to ensure the animations/challenge loads
+        userData = { fuelPoints: 0, unlockedPlanets: ["earth"] };
+
+        playerStatus.textContent = playerStatus.textContent.replace(' | Connecting to Mission Database...', '');
+        playerStatus.textContent += " | ❌ ERROR: Offline Mode (Game Data Defaulted)";
+
+        // START THE LEVEL UI with default data
+        startGameUI(userData);
     }
 }
 
