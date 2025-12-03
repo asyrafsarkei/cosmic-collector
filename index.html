@@ -2,31 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>The Cosmic Collector</title>
+    <title>Cosmic Collector - Mission Control</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
 </head>
 <body>
-    <h1>The Cosmic Collector - Architecture Test</h1>
+    <h1>🚀 The Cosmic Collector</h1>
+    <h3>Mission Control Access</h3>
     
-    <div id="status">Please Sign In to Begin Your Mission.</div>
-    <button id="loginButton">Sign In with Google</button>
-    <button id="logoutButton" style="display:none;">Sign Out</button>
+    <div id="status">Checking security clearance...</div>
+    <br>
+    <button id="loginButton" style="display:none;">Sign In with Google</button>
 
-    <hr>
-    
-    <div id="gameContainer" style="display:none;">
-        <h2>Current Mission: <span id="missionTitle"></span></h2>
-        <div id="challengeArea">
-            <p>Ready to start the Earth mission...</p>
-        </div>
-        <button id="startLevelButton">Begin Earth Mission</button>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     
-    <script src="/scriptv2.js"></script>
+    <script src="auth.js"></script>
 </body>
 </html>
-
-
