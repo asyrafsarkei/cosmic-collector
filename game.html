@@ -9,9 +9,49 @@
         #topBar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         #playerStatus { font-weight: bold; color: #006064; font-size: 1.1em; }
         #logoutButton { padding: 8px 15px; background-color: #ff5252; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
-        
         #gameArea { border: 4px solid #4dd0e1; background: white; padding: 20px; margin-top: 20px; display: none; border-radius: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
-        
+        #mountain {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            /* Create the triangle shape for the mountain using borders */
+            width: 0;
+            height: 0;
+            border-left: 100px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 250px solid #A0522D; /* Saddle Brown color */
+            z-index: 10;
+        }
+        #river {
+            position: absolute;
+            /* Start near the mountain peak and flow to the water */
+            top: 50px;
+            right: 110px; 
+            width: 30px; /* Small at the top */
+            height: 200px;
+            background: #00BFFF; /* Deep sky blue color */
+            border-bottom-left-radius: 5px; 
+            border-bottom-right-radius: 50px; /* Wider at the bottom for perspective */
+            z-index: 15;
+            overflow: hidden; /* Important for the water animation */
+        }
+        /* Water Flow Animation Element (The moving texture) */
+        #river::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 400%; /* Needs to be longer than the river itself */
+            background: repeating-linear-gradient(
+                to bottom,
+                #4169E1, /* Royal Blue */
+                #4169E1 20px,
+                #00BFFF 20px, /* Deep Sky Blue */
+                #00BFFF 40px
+            );
+            animation: river-flow 3s linear infinite; /* Start the animation */
+        }
         h2#missionTitle { color: #006064; text-align: center; }
 
         button#actionButton { padding: 12px 24px; font-size: 18px; background-color: #00bcd4; color: white; border: none; border-radius: 25px; cursor: pointer; margin-top: 15px; display: block; margin-left: auto; margin-right: auto; transition: transform 0.2s; }
@@ -87,6 +127,14 @@
         @keyframes sun-spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+        }
+        @keyframes river-flow {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-50%); /* Move the background texture up to simulate flow down */
+            }
         }
 
         .cycle-btn {
