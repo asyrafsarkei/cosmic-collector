@@ -4,8 +4,55 @@
     <meta charset="UTF-8">
     <title>Mission 1: Earth</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; }
-        #gameArea { border: 2px solid #333; padding: 20px; margin-top: 20px; display: none; }
+        body { font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif; padding: 20px; background-color: #e0f7fa; }
+        
+        #topBar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        #playerStatus { font-weight: bold; color: #006064; font-size: 1.1em; }
+        #logoutButton { padding: 8px 15px; background-color: #ff5252; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        
+        #gameArea { border: 4px solid #4dd0e1; background: white; padding: 20px; margin-top: 20px; display: none; border-radius: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+        
+        h2#missionTitle { color: #006064; text-align: center; }
+
+        button#actionButton { padding: 12px 24px; font-size: 18px; background-color: #00bcd4; color: white; border: none; border-radius: 25px; cursor: pointer; margin-top: 15px; display: block; margin-left: auto; margin-right: auto; transition: transform 0.2s; }
+        button#actionButton:hover { background-color: #0097a7; transform: scale(1.05); }
+
+        /* --- ANIMATION STYLES --- */
+        .scene-container {
+            position: relative;
+            height: 300px;
+            background: linear-gradient(to bottom, #87CEEB 60%, #4682B4 60%); /* Sky and Sea */
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+            border: 2px solid #333;
+        }
+
+        .sun { font-size: 60px; position: absolute; top: 20px; left: 20px; cursor: pointer; transition: transform 0.5s; }
+        .sun:hover { transform: scale(1.2) rotate(180deg); }
+
+        .cloud { font-size: 60px; position: absolute; top: 30px; right: 50px; opacity: 0.8; transition: opacity 1s; }
+        
+        .water-drop {
+            font-size: 24px;
+            position: absolute;
+            transition: all 2s ease-in-out;
+        }
+
+        /* Animation Keyframes */
+        @keyframes rise {
+            0% { bottom: 20px; left: 20%; opacity: 1; }
+            100% { bottom: 220px; left: 30%; opacity: 0; }
+        }
+
+        @keyframes fall {
+            0% { top: 70px; right: 80px; opacity: 1; }
+            100% { top: 250px; right: 80px; opacity: 0; }
+        }
+
+        .cycle-btn {
+            background: #FF9800; color: white; border: none; padding: 8px 16px; border-radius: 12px; cursor: pointer; font-weight: bold; margin: 5px;
+        }
     </style>
 </head>
 <body>
