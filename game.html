@@ -12,27 +12,37 @@
         #gameArea { border: 4px solid #4dd0e1; background: white; padding: 20px; margin-top: 20px; display: none; border-radius: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
         #island {
             position: absolute;
-            bottom: 0; /* Sits right at the ocean line (60% mark) */
+            bottom: 60px; /* Raise it slightly above the ocean line */
             right: 0;
-            width: 300px; /* Size of the island base */
-            height: 100px;
+            width: 300px;
+            height: 150px; /* Adjusted height */
             background-color: #556B2F; /* Dark Olive Green for land */
             z-index: 10;
             overflow: hidden;
             
-            /* Create the mountain peak on top of the island */
-            border-top: 150px solid transparent; /* Makes room for the mountain peak */
-            border-left: 50px solid transparent;
-            border-right: 250px solid transparent;
-            border-top-color: #8B4513; /* Saddle Brown for the mountain peak */
+            /* 🔥 KEY CHANGE: Use border-radius for organic, rolling hills/peak shape */
+            border-top-left-radius: 90% 120px; 
+            border-top-right-radius: 60% 150px;
+        }
+        /* Add a peak on top of the island for the river source */
+        #island::before {
+            content: "";
+            position: absolute;
+            top: -50px; /* Push the peak above the main island body */
+            right: 50px; 
+            width: 100px;
+            height: 100px;
+            background-color: #8B4513; /* Saddle Brown for the mountain peak */
+            border-radius: 50%; /* Makes it a clean circle */
         }
         #river {
             position: absolute;
             /* Position river to flow down the mountain's slope */
-            top: 70px;
-            right: 130px; 
+            /* Adjusted right position to flow from the new peak */
+            top: 100px; 
+            right: 170px; /* Aligned with the new peak */
             width: 100px; 
-            height: 180px;
+            height: 150px;
             background: transparent; 
             z-index: 15;
             overflow: hidden;
