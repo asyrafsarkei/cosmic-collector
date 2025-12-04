@@ -103,7 +103,7 @@ function startGameUI(userData) {
                 <div class="cloud" id="cloudSmall1" style="opacity:0.2; top: 80px; left: 150px; font-size: 30px;">☁️</div>
                 <div class="cloud" id="cloudSmall2" style="opacity:0.2; top: 50px; right: 10px; font-size: 40px;">☁️</div>
                 <div class="cloud" id="cloudCenter" style="opacity:0.3; top: 100px; left: 300px; font-size: 70px;">☁️</div>
-                <div class="cloud" id="cloudCenterC1" style="opacity:0.3; top: 90px; left: 290px; font-size: 90px;">☁️</div>
+                <div class="cloud" id="cloudCenterC1" style="opacity:0.3; top: 90px; left: 500px; font-size: 90px;">☁️</div>
                 </div>
 
             <div style="text-align:center;">
