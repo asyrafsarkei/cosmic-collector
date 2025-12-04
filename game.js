@@ -123,64 +123,91 @@ function startGameUI(userData) {
 }
 
 // --- ANIMATION HELPER FUNCTIONS ---
-// These make the emojis move on the screen
-
 window.animateEvaporation = function() {
     const scene = document.getElementById('waterScene');
-    document.getElementById('cycleStatus').textContent = "The Sun warms the ocean, turning water into vapor (Gas)! Look at all the water rising! 💧🔥";
+    document.getElementById('cycleStatus').textContent = "The Sun warms the ocean, turning water into invisible VAPOR (Gas)! Vapor is rising! 💨🔥";
     
-    // Use a loop to create and animate three drops
-    for(let i = 0; i < 3; i++) {
-        // Stagger the drops to start slightly apart in time and position
+    // Use a loop to create and animate three "puffs" of vapor
+    for(let i = 0; i < 5; i++) {
         setTimeout(() => {
-            const drop = document.createElement('div');
-            drop.textContent = '💧';
-            drop.className = 'water-drop';
+            const vapor = document.createElement('div');
+            // Using a simple character or text to represent gas/vapor
+            vapor.textContent = '⚬'; // Small white circle for vapor
+            vapor.className = 'vapor-puff'; 
+            vapor.style.color = '#FFFFFF'; // White color
+            vapor.style.fontSize = '18px';
             
-            // Randomize starting position slightly
-            const startX = 25 + (i * 10); // Start drops near 25% to 45% horizontal position
-            drop.style.bottom = '20px';
-            drop.style.left = startX + '%';
-            scene.appendChild(drop);
+            // Positioning (similar to drops before, starting at the ocean)
+            const startX = 25 + (i * 10); 
+            vapor.style.bottom = '20px';
+            vapor.style.left = startX + '%';
+            vapor.style.position = 'absolute';
+            vapor.style.opacity = '1';
+            vapor.style.transition = 'all 2.5s ease-out';
+            scene.appendChild(vapor);
 
-            // Force browser to realize element is there before moving it
+            // Trigger the rise and fade (Evaporation)
             setTimeout(() => {
-                // Animate to a different, higher position
-                drop.style.bottom = '220px'; 
-                drop.style.left = (startX + 5) + '%';
-                drop.style.opacity = '0';    // Fade out
-                drop.style.transitionDuration = '2.5s'; // Make rise slightly longer
+                vapor.style.bottom = '220px'; 
+                vapor.style.left = (startX + 5) + '%';
+                vapor.style.opacity = '0'; // Completely invisible at the top
             }, 50);
 
             // Clean up element after animation
-            setTimeout(() => { drop.remove(); }, 2600);
-        }, i * 400); // Stagger the start time by 400ms
+            setTimeout(() => { vapor.remove(); }, 2600);
+        }, i * 400); 
     }
 }
 
 window.animateCondensation = function() {
-    document.getElementById('cycleStatus').textContent = "Water vapor cools down high up and gathers to form BIGGER CLOUDS! ☁️☁️☁️";
+    document.getElementById('cycleStatus').textContent = "Water vapor cools down high up and CONDENSES into liquid droplets, forming BIGGER CLOUDS! 💧☁️";
     
     const cloudMain = document.getElementById('cloudMain');
     const cloudSmall1 = document.getElementById('cloudSmall1');
     const cloudSmall2 = document.getElementById('cloudSmall2');
+    const scene = document.getElementById('waterScene');
 
-    // Make main cloud grow and darken
+    // 1. Cloud Appearance and Growth
     cloudMain.style.opacity = '1';
-    cloudMain.style.transform = "scale(2.0)"; // Grow significantly
-    cloudMain.style.color = "#bbbbbb"; // Change color slightly (visual cue)
+    cloudMain.style.transform = "scale(2.0)";
+    cloudMain.style.color = "#bbbbbb";
 
-    // Make small clouds join (move toward the main cloud and disappear)
     cloudSmall1.style.opacity = '0';
     cloudSmall2.style.opacity = '0';
     cloudSmall1.style.transitionDuration = '1.5s';
     cloudSmall2.style.transitionDuration = '1.5s';
 
-    // Reset after animation
+    // 2. Condensing Droplets Effect
+    for (let i = 0; i < 5; i++) {
+        // Create small liquid drops inside the cloud zone
+        setTimeout(() => {
+            const droplet = document.createElement('div');
+            droplet.textContent = '💧';
+            droplet.style.position = 'absolute';
+            droplet.style.fontSize = '10px'; // Small droplet size
+            droplet.style.opacity = '0';
+
+            // Random position near the main cloud
+            droplet.style.top = (40 + Math.random() * 50) + 'px';
+            droplet.style.right = (50 + Math.random() * 80) + 'px';
+            scene.appendChild(droplet);
+
+            // Animate them to appear (fade in) inside the cloud
+            setTimeout(() => {
+                droplet.style.opacity = '1';
+                droplet.style.transition = 'opacity 0.5s';
+            }, 50);
+
+            // Remove them shortly after the main cloud resets
+            setTimeout(() => { droplet.remove(); }, 2000);
+        }, i * 200);
+    }
+    
+    // 3. Reset after animation
     setTimeout(() => { 
         cloudMain.style.transform = "scale(1.0)"; 
         cloudMain.style.color = ""; 
-    }, 2000); // 2 seconds to show the growth
+    }, 2000);
 }
 
 window.animatePrecipitation = function() {
