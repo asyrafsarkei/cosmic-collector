@@ -253,8 +253,13 @@ window.animatePrecipitation = function() {
     document.getElementById('cycleStatus').textContent = "The clouds get heavy and water falls as Rain (Precipitation)! 🌧️";
     
     const sun = document.querySelector('.sun'); // Get the sun element
-    sun.style.opacity = '0.1'; // Dim the sun for heavy rain effect
-    sun.style.transition = 'opacity 0.5s';
+    const darkCloud = document.getElementById('darkCloud'); // Get the new dark cloud
+
+    // 🔥 NEW: Slide dark cloud over the sun
+    darkCloud.style.transition = 'all 0.5s ease-out';
+    darkCloud.style.opacity = '1';
+    darkCloud.style.top = '10px';    // Move it into the visible area
+    darkCloud.style.left = '10px';
     
     // 1. Define the source clouds (The ones that condensed and grew)
     const sourceClouds = [
@@ -366,4 +371,26 @@ function startBackgroundMusic() {
         console.log("Audio requires user interaction to start. Please click the button.");
         isAudioPlaying = false;
     });
+}
+
+// --- SCENE RESET HELPER ---
+function resetScene() {
+    const sun = document.querySelector('.sun');
+    const cloudSmall1 = document.getElementById('cloudSmall1');
+    const cloudSmall2 = document.getElementById('cloudSmall2');
+    const darkCloud = document.getElementById('darkCloud'); // Get the dark cloud
+
+    // 🔥 NEW: Hide the dark cloud by sliding it off-screen
+    darkCloud.style.opacity = '0';
+    darkCloud.style.top = '-100px'; 
+    darkCloud.style.left = '-100px';
+    
+    // Restore sun brightness (just in case)
+    sun.style.opacity = '1'; 
+    
+    // Restore small clouds 
+    cloudSmall1.style.opacity = '0.2'; 
+    cloudSmall2.style.opacity = '0.2'; 
+
+    document.getElementById('cycleStatus').textContent = "Cycle step complete. Choose the next step or start the challenge.";
 }
