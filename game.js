@@ -105,7 +105,7 @@ function startGameUI(userData) {
                 <div class="cloud" id="cloudBig1" style="opacity:0.2; top: 90px; right: 25px; font-size: 100px;">☁️</div>
                 <div class="cloud" id="cloudCenter" style="opacity:0.3; top: 100px; left: 300px; font-size: 70px;">☁️</div>
                 <div class="cloud" id="cloudCenterC1" style="opacity:0.3; top: 90px; left: 500px; font-size: 90px;">☁️</div>
-                <div class="cloud" id="cloudCenterC2" style="opacity:0.3; top: 90px; right: 50px; font-size: 90px;">☁️</div>
+                <div class="cloud" id="cloudCenterC2" style="opacity:0.3; top: 90px; left: 50px; font-size: 90px;">☁️</div>
                 </div>
 
             <div style="text-align:center;">
@@ -231,14 +231,14 @@ window.animateCondensation = function() {
         cloudCenter.style.opacity = "0.3";
         cloudCenterC1.style.transform = "scale(1.0)"; 
         cloudCenterC1.style.color = "";
-        cloudCenterC1.style.opacity = "0.3";
+        cloudCenterC1.style.opacity = "0.5";
         cloudCenterC2.style.transform = "scale(1.0)"; 
         cloudCenterC2.style.color = "";
-        cloudCenterC2.style.opacity = "0.3";
+        cloudCenterC2.style.opacity = "0.5";
 
         cloudSmall1.style.opacity = '0.2';
         cloudSmall2.style.opacity = '0.2';
-        cloudBig1.style.opacity = '0.2';
+        //cloudBig1.style.opacity = '0.2';
     }, 2000);
 }
 
