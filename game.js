@@ -131,6 +131,7 @@ function startGameUI(userData) {
             startChallengeOne();
         };
         startBackgroundMusic();
+        enableRandomInteractions();
     }
 }
 
@@ -342,7 +343,51 @@ window.animatePrecipitation = function() {
         }, i * 150); // Stagger timing
     }
 }
+const waterScene = document.getElementById('waterScene');
+function enableRandomInteractions() {
+    const scene = document.getElementById('waterScene');
+    if (scene) {
+        scene.addEventListener('click', spawnOxygen);
+    }
+}
 
+// --- OXYGEN SPAWN ANIMATION ---
+function spawnOxygen(event) {
+    const scene = event.currentTarget;
+    
+    // Get click position relative to the scene container
+    const rect = scene.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    // Create the Oxygen element
+    const oxygen = document.createElement('div');
+    oxygen.textContent = 'O₂';
+    
+    // Apply initial styles
+    oxygen.style.position = 'absolute';
+    oxygen.style.left = `${x}px`;
+    oxygen.style.top = `${y}px`;
+    oxygen.style.color = '#7FFFD4'; // Light turquoise/aqua color
+    oxygen.style.fontSize = '24px';
+    oxygen.style.fontWeight = 'bold';
+    oxygen.style.opacity = '1';
+    oxygen.style.transition = 'all 1s ease-out'; // Animation duration
+
+    scene.appendChild(oxygen);
+
+    // Trigger the animation: move up slightly and fade out
+    setTimeout(() => {
+        // Move up 20px and fade to 0 opacity
+        oxygen.style.transform = 'translateY(-20px)';
+        oxygen.style.opacity = '0';
+    }, 10); // Start animation almost immediately
+
+    // Remove the element after the transition finishes (1 second + small buffer)
+    setTimeout(() => {
+        oxygen.remove();
+    }, 1050); 
+}
 function startChallengeOne() {
     // Update the UI for the actual question
     challengeContainer.innerHTML = `
