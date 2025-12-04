@@ -354,26 +354,46 @@ function enableRandomInteractions() {
 
 // --- OXYGEN SPAWN ANIMATION ---
 function spawnOxygen(event) {
-    const scene = event.currentTarget;
+    // Prevent the default action (like scrolling/zooming on mobile)
+    event.preventDefault(); 
     
-    // Get click position relative to the scene container
+    const scene = event.currentTarget;
     const rect = scene.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    
+    let clientX, clientY;
+    
+    // Handle both touch and mouse events for phone compatibility
+    if (event.touches && event.touches.length > 0) {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+    } else {
+        clientX = event.clientX;
+        clientY = event.clientY;
+    }
+
+    // Get click position relative to the scene container
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
 
     // Create the Oxygen element
     const oxygen = document.createElement('div');
-    oxygen.textContent = 'O₂';
+    
+    // 🔥 FIX: Use innerHTML to render the subscript tag 
+    // This creates the proper chemical notation: O₂
+    oxygen.innerHTML = 'O<sub style="font-size: 60%;">2</sub>'; 
     
     // Apply initial styles
     oxygen.style.position = 'absolute';
+    // Set position using calculated coordinates
     oxygen.style.left = `${x}px`;
-    oxygen.style.top = `${y}px`;
-    oxygen.style.color = '#7FFFD4'; // Light turquoise/aqua color
-    oxygen.style.fontSize = '24px';
+    oxygen.style.top = `${y}px`; 
+    oxygen.style.color = '#7FFFD4'; 
+    oxygen.style.fontSize = '30px'; // Increased size for visibility
     oxygen.style.fontWeight = 'bold';
     oxygen.style.opacity = '1';
     oxygen.style.transition = 'all 1s ease-out'; // Animation duration
+    oxygen.style.pointerEvents = 'none'; // Prevent the spawned element from blocking future clicks
+    oxygen.style.zIndex = '100'; // Ensure it appears above everything else
 
     scene.appendChild(oxygen);
 
@@ -382,7 +402,7 @@ function spawnOxygen(event) {
         // Move up 20px and fade to 0 opacity
         oxygen.style.transform = 'translateY(-20px)';
         oxygen.style.opacity = '0';
-    }, 10); // Start animation almost immediately
+    }, 10); 
 
     // Remove the element after the transition finishes (1 second + small buffer)
     setTimeout(() => {
