@@ -113,7 +113,7 @@ function startGameUI(userData) {
                 <button class="cycle-btn" onclick="animateCondensation()">2. Condensation ☁️</button>
                 <button class="cycle-btn" onclick="animatePrecipitation()">3. Precipitation 🌧️</button>
             </div>
-            <div style="text-align:center; margin-top: 15px;">
+            <div style="text-align:center;">
                                 <button id="soundButton" class="cycle-btn" onclick="toggleBackgroundMusic()" style="background-color: #4CAF50;">
                     ▶️ Play Sound
                 </button>
