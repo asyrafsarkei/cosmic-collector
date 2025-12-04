@@ -375,19 +375,25 @@ function spawnMolecule(event) {
     const y = clientY - rect.top;
 
     // 🔥 RANDOM DECISION STEP
-    const isWater = Math.random() < 0.5; // 50% chance for Water (H₂O)
-
+    //const isWater = Math.random() < 0.5; // 50% chance for Water (H₂O)
+    const choice = Math.floor(Math.random() * 3);
+    
     let moleculeHTML;
     let moleculeColor;
 
-    if (isWater) {
+    if (choice===0) {
         // Water (H₂O)
         moleculeHTML = 'H<sub style="font-size: 60%;">2</sub>O';
         moleculeColor = '#4DD2FF'; // Light blue/cyan for water
-    } else {
+    } else if(choice===1) {
         // Oxygen (O₂)
         moleculeHTML = 'O<sub style="font-size: 60%;">2</sub>';
         moleculeColor = '#7FFFD4'; // Light green/turquoise for oxygen
+    } else {
+        // 🔥 Hydrogen Atom (H)
+        moleculeHTML = 'H';
+        moleculeColor = '#FFFFFF'; // White for a basic atom
+        moleculeSize = '40px'; // Make the single atom slightly larger for visibility
     }
     
     // Create the Molecule element
