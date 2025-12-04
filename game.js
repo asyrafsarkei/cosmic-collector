@@ -348,6 +348,7 @@ function enableRandomInteractions() {
     const scene = document.getElementById('waterScene');
     if (scene) {
         scene.addEventListener('click', spawnOxygen);
+        scene.addEventListener('touchstart', spawnOxygen);
     }
 }
 
