@@ -99,7 +99,7 @@ function startGameUI(userData) {
 
             <div class="scene-container" id="waterScene">
                 <div class="sun">☀️</div>
-                <div id="darkCloud" style="position: absolute; top: -100px; left: -10px; font-size: 100px; opacity: 0; color: #444444; z-index: 50;">⛈️</div>
+                <div id="darkCloud" style="position: absolute; top: -100px; left: -100px; font-size: 100px; opacity: 0; color: #444444; z-index: 50;">⛈️</div>
                 <div id="aircraft" style="position: absolute; top: 150px; left: 100%; font-size: 50px; z-index: 40; animation: flyLoop 20s linear infinite;">🛸</div>
                 <div class="cloud" id="cloudMain" style="opacity:0.3; top: 30px; right: 50px; font-size: 60px;">☁️</div>
                 <div class="cloud" id="cloudSmall1" style="opacity:0.2; top: 80px; left: 150px; font-size: 30px;">☁️</div>
@@ -261,7 +261,7 @@ window.animatePrecipitation = function() {
     darkCloud.style.transition = 'none'; // Temporarily disable transition
     darkCloud.style.opacity = '0';
     darkCloud.style.top = '-100px';    
-    darkCloud.style.left = '10px';
+    darkCloud.style.left = '-100px';
     
     // 2. Schedule the transition and slide-in for the next frame
     setTimeout(() => {
