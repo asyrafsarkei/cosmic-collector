@@ -103,6 +103,7 @@ function startGameUI(userData) {
                 <div class="cloud" id="cloudSmall1" style="opacity:0.2; top: 80px; left: 150px; font-size: 30px;">☁️</div>
                 <div class="cloud" id="cloudSmall2" style="opacity:0.2; top: 50px; right: 10px; font-size: 40px;">☁️</div>
                 <div class="cloud" id="cloudCenter" style="opacity:0.3; top: 100px; left: 300px; font-size: 70px;">☁️</div>
+                <div class="cloud" id="cloudCenterC1" style="opacity:0.3; top: 90px; left: 290px; font-size: 90px;">☁️</div>
                 </div>
 
             <div style="text-align:center;">
@@ -167,6 +168,7 @@ window.animateCondensation = function() {
     const cloudSmall1 = document.getElementById('cloudSmall1');
     const cloudSmall2 = document.getElementById('cloudSmall2');
     const cloudCenter = document.getElementById('cloudCenter');
+    const cloudCenterC1 = document.getElementById('cloudCenterC1');
     const scene = document.getElementById('waterScene');
 
     // 1. Cloud Appearance and Growth
@@ -176,6 +178,9 @@ window.animateCondensation = function() {
     cloudCenter.style.opacity = '1';
     cloudCenter.style.transform = "scale(2.0)";
     cloudCenter.style.color = "#bbbbbb";
+    cloudCenterC1.style.opacity = '1';
+    cloudCenterC1.style.transform = "scale(2.0)";
+    cloudCenterC1.style.color = "#bbbbbb";
     
     cloudSmall1.style.opacity = '0';
     cloudSmall2.style.opacity = '0';
@@ -214,6 +219,8 @@ window.animateCondensation = function() {
         cloudMain.style.color = ""; 
         cloudCenter.style.transform = "scale(1.0)"; 
         cloudCenter.style.color = ""; 
+        cloudCenterC1.style.transform = "scale(1.0)"; 
+        cloudCenterC1.style.color = "";
     }, 2000);
 }
 
