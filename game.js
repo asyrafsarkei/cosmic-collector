@@ -347,11 +347,80 @@ const waterScene = document.getElementById('waterScene');
 function enableRandomInteractions() {
     const scene = document.getElementById('waterScene');
     if (scene) {
-        scene.addEventListener('click', spawnOxygen);
-        scene.addEventListener('touchstart', spawnOxygen);
+        scene.addEventListener('click', spawnMolecule);
+        scene.addEventListener('touchstart', spawnMolecule);
     }
 }
 
+// --- MOLECULE SPAWN ANIMATION (O₂ or H₂O) ---
+function spawnMolecule(event) {
+    event.preventDefault(); 
+    
+    const scene = event.currentTarget;
+    const rect = scene.getBoundingClientRect();
+    
+    let clientX, clientY;
+    
+    // Handle both touch and mouse events
+    if (event.touches && event.touches.length > 0) {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+    } else {
+        clientX = event.clientX;
+        clientY = event.clientY;
+    }
+
+    // Get click position relative to the scene container
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    // 🔥 RANDOM DECISION STEP
+    const isWater = Math.random() < 0.5; // 50% chance for Water (H₂O)
+
+    let moleculeHTML;
+    let moleculeColor;
+
+    if (isWater) {
+        // Water (H₂O)
+        moleculeHTML = 'H<sub style="font-size: 60%;">2</sub>O';
+        moleculeColor = '#4DD2FF'; // Light blue/cyan for water
+    } else {
+        // Oxygen (O₂)
+        moleculeHTML = 'O<sub style="font-size: 60%;">2</sub>';
+        moleculeColor = '#7FFFD4'; // Light green/turquoise for oxygen
+    }
+    
+    // Create the Molecule element
+    const molecule = document.createElement('div');
+    
+    // Set the chosen molecule structure
+    molecule.innerHTML = moleculeHTML; 
+    
+    // Apply initial styles
+    molecule.style.position = 'absolute';
+    molecule.style.left = `${x}px`;
+    molecule.style.top = `${y}px`; 
+    molecule.style.color = moleculeColor; // Use the chosen color
+    molecule.style.fontSize = '30px'; 
+    molecule.style.fontWeight = 'bold';
+    molecule.style.opacity = '1';
+    molecule.style.transition = 'all 1s ease-out';
+    molecule.style.pointerEvents = 'none';
+    molecule.style.zIndex = '100';
+
+    scene.appendChild(molecule);
+
+    // Trigger the animation: move up slightly and fade out
+    setTimeout(() => {
+        molecule.style.transform = 'translateY(-20px)';
+        molecule.style.opacity = '0';
+    }, 10); 
+
+    // Remove the element
+    setTimeout(() => {
+        molecule.remove();
+    }, 1050); 
+}
 // --- OXYGEN SPAWN ANIMATION ---
 function spawnOxygen(event) {
     // Prevent the default action (like scrolling/zooming on mobile)
