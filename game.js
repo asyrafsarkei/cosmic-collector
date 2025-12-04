@@ -221,6 +221,10 @@ window.animateCondensation = function() {
         cloudCenter.style.color = ""; 
         cloudCenterC1.style.transform = "scale(1.0)"; 
         cloudCenterC1.style.color = "";
+        cloudCenterC1.style.opacity = "0.3";
+
+        cloudSmall1.style.opacity = '0.2';
+        cloudSmall2.style.opacity = '0.2';
     }, 2000);
 }
 
