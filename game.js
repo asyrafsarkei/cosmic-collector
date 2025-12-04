@@ -251,7 +251,11 @@ window.animateCondensation = function() {
 window.animatePrecipitation = function() {
     const scene = document.getElementById('waterScene');
     document.getElementById('cycleStatus').textContent = "The clouds get heavy and water falls as Rain (Precipitation)! 🌧️";
-
+    
+    const sun = document.querySelector('.sun'); // Get the sun element
+    sun.style.opacity = '0.1'; // Dim the sun for heavy rain effect
+    sun.style.transition = 'opacity 0.5s';
+    
     // 1. Define the source clouds (The ones that condensed and grew)
     const sourceClouds = [
         document.getElementById('cloudMain'),
@@ -260,7 +264,7 @@ window.animatePrecipitation = function() {
     ];
 
     // 2. Loop to create 15 falling drops from various clouds
-    for(let i = 0; i < 15; i++) {
+    for(let i = 0; i < 35; i++) {
         setTimeout(() => {
             // Select a random cloud source for this drop
             const randomCloud = sourceClouds[Math.floor(Math.random() * sourceClouds.length)];
@@ -304,7 +308,12 @@ window.animatePrecipitation = function() {
             }, 50);
 
             // Clean up element after animation
-            setTimeout(() => { drop.remove(); }, 2000);
+            setTimeout(() => { 
+                drop.remove(); 
+                if (i === 14) { // Check if this is the last drop being cleaned up
+                     resetScene(); // Call the new reset function
+                }
+            }, 2200);
 
         }, i * 150); // Stagger timing
     }
