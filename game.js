@@ -99,7 +99,7 @@ function startGameUI(userData) {
 
             <div class="scene-container" id="waterScene">
                 <div class="sun">☀️</div>
-                <div id="darkCloud" style="position: absolute; top: -100px; left: -100px; font-size: 100px; opacity: 0; color: #444444; z-index: 50;">☁️</div>
+                <div id="darkCloud" style="position: absolute; top: -100px; left: -100px; font-size: 100px; opacity: 0; color: #444444; z-index: 50;">🌧️</div>
                 <div class="cloud" id="cloudMain" style="opacity:0.3; top: 30px; right: 50px; font-size: 60px;">☁️</div>
                 <div class="cloud" id="cloudSmall1" style="opacity:0.2; top: 80px; left: 150px; font-size: 30px;">☁️</div>
                 <div class="cloud" id="cloudSmall2" style="opacity:0.2; top: 50px; right: 10px; font-size: 40px;">☁️</div>
@@ -260,7 +260,7 @@ window.animatePrecipitation = function() {
     darkCloud.style.transition = 'none'; // Temporarily disable transition
     darkCloud.style.opacity = '0';
     darkCloud.style.top = '-100px';    
-    darkCloud.style.left = '-100px';
+    darkCloud.style.left = '10px';
     
     // 2. Schedule the transition and slide-in for the next frame
     setTimeout(() => {
@@ -392,7 +392,7 @@ function resetScene() {
     // 🔥 NEW: Hide the dark cloud by sliding it off-screen
     darkCloud.style.opacity = '0';
     darkCloud.style.top = '-100px'; 
-    darkCloud.style.left = '-100px';
+    darkCloud.style.left = '10px';
     
     // Restore sun brightness (just in case)
     sun.style.opacity = '1'; 
