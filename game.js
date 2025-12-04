@@ -257,19 +257,28 @@ window.animatePrecipitation = function() {
     const sun = document.querySelector('.sun'); // Get the sun element
     const darkCloud = document.getElementById('darkCloud'); // Get the dark cloud
 
-    // 1. Reset the cloud to its hidden, starting position instantly (no transition)
-    darkCloud.style.transition = 'none'; // Temporarily disable transition
-    darkCloud.style.opacity = '0';
-    darkCloud.style.top = '-100px';    
-    darkCloud.style.left = '-100px';
+    if (darkCloud) {
+        // 1. Instant Reset to start position (off-screen, hidden, and blurred)
+        darkCloud.style.transition = 'none'; // Disable transition for instant reset
+        darkCloud.style.opacity = '0';
+        darkCloud.style.top = '-100px';    
+        darkCloud.style.left = '-100px';
+        darkCloud.style.filter = 'blur(15px)'; // Start highly blurred
     
-    // 2. Schedule the transition and slide-in for the next frame
-    setTimeout(() => {
-        darkCloud.style.transition = 'all 0.5s ease-out'; // Re-enable transition
-        darkCloud.style.opacity = '1';
-        darkCloud.style.top = '10px';    // Move it into the visible area
-        darkCloud.style.left = '10px';   
-    }, 50);
+        // 2. Schedule the Slide-In (Transition enabled)
+        setTimeout(() => {
+            darkCloud.style.transition = 'all 0.5s ease-out'; // Enable transition
+            darkCloud.style.opacity = '1';
+            darkCloud.style.top = '10px';    // Slide it into position
+            darkCloud.style.left = '10px';   
+        }, 50); // Small delay to force the transition to take effect
+        
+        // 3. Schedule the Solid Appearance (Transition enabled, blur reduces)
+        setTimeout(() => {
+            darkCloud.style.transition = 'filter 0.5s ease-in'; // Switch transition focus
+            darkCloud.style.filter = 'blur(0px)'; // Sharpen the cloud to solid
+        }, 550); // Wait 50ms (delay) + 500ms (slide-in)
+    }
     
     // 1. Define the source clouds (The ones that condensed and grew)
     const sourceClouds = [
@@ -388,19 +397,27 @@ function resetScene() {
     const sun = document.querySelector('.sun');
     const cloudSmall1 = document.getElementById('cloudSmall1');
     const cloudSmall2 = document.getElementById('cloudSmall2');
-    const darkCloud = document.getElementById('darkCloud'); // Get the dark cloud
+    const darkCloud = document.getElementById('darkCloud'); 
 
-    // 🔥 NEW: Hide the dark cloud by sliding it off-screen
-    darkCloud.style.opacity = '0';
-    darkCloud.style.top = '-100px'; 
-    darkCloud.style.left = '10px';
+    if (darkCloud) {
+        // 1. Blur Out (Transition enabled)
+        darkCloud.style.transition = 'filter 0.5s ease-out'; // Transition only the blur
+        darkCloud.style.filter = 'blur(15px)'; // Blur the cloud immediately
+        
+        // 2. Schedule the Slide-Out and Hide (Transition enabled)
+        setTimeout(() => {
+            darkCloud.style.transition = 'all 0.5s ease-in'; // Transition position and opacity
+            darkCloud.style.opacity = '0';
+            darkCloud.style.top = '-100px'; 
+            darkCloud.style.left = '-100px';
+        }, 500); // Wait 500ms for the blur effect to finish
+    }
     
-    // Restore sun brightness (just in case)
-    sun.style.opacity = '1'; 
-    
-    // Restore small clouds 
-    cloudSmall1.style.opacity = '0.2'; 
-    cloudSmall2.style.opacity = '0.2'; 
-
-    document.getElementById('cycleStatus').textContent = "Cycle step complete. Choose the next step or start the challenge.";
+    // Restore sun brightness and small clouds (run after a brief delay)
+    setTimeout(() => {
+        sun.style.opacity = '1'; 
+        cloudSmall1.style.opacity = '0.2'; 
+        cloudSmall2.style.opacity = '0.2'; 
+        document.getElementById('cycleStatus').textContent = "Cycle step complete. Choose the next step or start the challenge.";
+    }, 1000); // Wait 1 second (longer than the blur-out and slide-out)
 }
