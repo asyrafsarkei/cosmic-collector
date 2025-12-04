@@ -102,7 +102,7 @@ function startGameUI(userData) {
                 <div class="cloud" id="cloudMain" style="opacity:0.3; top: 30px; right: 50px; font-size: 60px;">☁️</div>
                 <div class="cloud" id="cloudSmall1" style="opacity:0.2; top: 80px; left: 150px; font-size: 30px;">☁️</div>
                 <div class="cloud" id="cloudSmall2" style="opacity:0.2; top: 50px; right: 10px; font-size: 40px;">☁️</div>
-                <div class="cloud" id="cloudCenter" style="opacity:0.2; top: 100px; left: 300px; font-size: 50px;">☁️</div>
+                <div class="cloud" id="cloudCenter" style="opacity:0.3; top: 100px; left: 300px; font-size: 70px;">☁️</div>
                 </div>
 
             <div style="text-align:center;">
@@ -173,13 +173,14 @@ window.animateCondensation = function() {
     cloudMain.style.opacity = '1';
     cloudMain.style.transform = "scale(2.0)";
     cloudMain.style.color = "#bbbbbb";
-
+    cloudCenter.style.opacity = '1';
+    cloudCenter.style.transform = "scale(2.0)";
+    cloudCenter.style.color = "#bbbbbb";
+    
     cloudSmall1.style.opacity = '0';
     cloudSmall2.style.opacity = '0';
-    cloudCenter.style.opacity = '0';
     cloudSmall1.style.transitionDuration = '1.5s';
     cloudSmall2.style.transitionDuration = '1.5s';
-    cloudCenter.style.transitionDuration = '1.5s';
 
     // 2. Condensing Droplets Effect
     for (let i = 0; i < 5; i++) {
@@ -211,6 +212,8 @@ window.animateCondensation = function() {
     setTimeout(() => { 
         cloudMain.style.transform = "scale(1.0)"; 
         cloudMain.style.color = ""; 
+        cloudCenter.style.transform = "scale(1.0)"; 
+        cloudCenter.style.color = ""; 
     }, 2000);
 }
 
