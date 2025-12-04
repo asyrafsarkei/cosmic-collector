@@ -113,6 +113,11 @@ function startGameUI(userData) {
                 <button class="cycle-btn" onclick="animateCondensation()">2. Condensation ☁️</button>
                 <button class="cycle-btn" onclick="animatePrecipitation()">3. Precipitation 🌧️</button>
             </div>
+            <div style="text-align:center; margin-top: 15px;">
+                                <button id="soundButton" class="cycle-btn" onclick="toggleBackgroundMusic()" style="background-color: #4CAF50;">
+                    ▶️ Play Sound
+                </button>
+            </div>
             
             <p id="cycleStatus" style="text-align:center; font-style:italic; height: 30px;">Waiting for input...</p>
         `;
@@ -123,6 +128,7 @@ function startGameUI(userData) {
         actionButton.onclick = () => {
             startChallengeOne();
         };
+        startBackgroundMusic();
     }
 }
 
@@ -277,4 +283,39 @@ function startChallengeOne() {
     
     // Hide the start button since the game has started
     actionButton.style.display = "none"; 
+}
+
+// --- AUDIO CONTROL FUNCTIONS ---
+const backgroundAudio = document.getElementById('backgroundAudio');
+let isAudioPlaying = false;
+
+function toggleBackgroundMusic() {
+    if (!backgroundAudio) return; // Exit if audio element wasn't found
+
+    if (isAudioPlaying) {
+        backgroundAudio.pause();
+        isAudioPlaying = false;
+        document.getElementById('soundButton').textContent = "▶️ Play Sound";
+    } else {
+        // Browsers require user interaction to start audio, so this needs to be inside a click handler
+        backgroundAudio.play().catch(error => {
+            console.error("Audio playback failed (usually due to browser autoplay policy):", error);
+        });
+        isAudioPlaying = true;
+        document.getElementById('soundButton').textContent = "⏸️ Stop Sound";
+    }
+}
+
+// Function to start the sound automatically when the game loads (will rely on user interaction)
+function startBackgroundMusic() {
+    // Attempt to start playing. If the browser blocks it, the user will need to click the button.
+    backgroundAudio.play().then(() => {
+        isAudioPlaying = true;
+        // Optionally update the button text if it starts successfully
+        const soundButton = document.getElementById('soundButton');
+        if(soundButton) soundButton.textContent = "⏸️ Stop Sound";
+    }).catch(error => {
+        console.log("Audio requires user interaction to start. Please click the button.");
+        isAudioPlaying = false;
+    });
 }
