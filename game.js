@@ -381,20 +381,24 @@ function spawnMolecule(event) {
     let moleculeHTML;
     let moleculeColor;
     let moleculeSize = '30px';
+    let moleculePhrase;
 
     if (choice===0) {
         // Water (H₂O)
         moleculeHTML = 'H<sub style="font-size: 60%;">2</sub>O';
         moleculeColor = '#4DD2FF'; // Light blue/cyan for water
+        moleculePhrase = "H two O is Water";
     } else if(choice===1) {
         // Oxygen (O₂)
         moleculeHTML = 'O<sub style="font-size: 60%;">2</sub>';
         moleculeColor = '#7FFFD4'; // Light green/turquoise for oxygen
+        moleculePhrase = "O two is Oxygen";
     } else {
         // 🔥 Hydrogen Atom (H)
         moleculeHTML = 'H';
         moleculeColor = '#FFFFFF'; // White for a basic atom
         moleculeSize = '40px'; // Make the single atom slightly larger for visibility
+        moleculePhrase = "H is Hydrogen";
     }
     
     // Create the Molecule element
@@ -416,6 +420,7 @@ function spawnMolecule(event) {
     molecule.style.zIndex = '100';
 
     scene.appendChild(molecule);
+    speakMolecule(moleculePhrase);
 
     // Trigger the animation: move up slightly and fade out
     setTimeout(() => {
@@ -533,7 +538,41 @@ function startBackgroundMusic() {
         isAudioPlaying = false;
     });
 }
+// --- SPEECH SYNTHESIS HELPER WITH AUDIO DUCKING ---
+function speakMolecule(textToSpeak) {
+    // Get the background audio element (Ensure it's accessible globally or passed in)
+    const bgAudio = document.getElementById('backgroundAudio'); 
 
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        
+        // 1. Duck the volume when speech starts
+        utterance.onstart = () => {
+            if (bgAudio) {
+                // Reduce volume significantly (e.g., 1.0 down to 0.2)
+                bgAudio.volume = 0.2; 
+                bgAudio.style.transition = 'volume 0.3s ease-in-out';
+            }
+        };
+
+        // 2. Restore the volume when speech ends
+        utterance.onend = () => {
+            if (bgAudio) {
+                // Restore original volume
+                bgAudio.volume = 1.0; 
+            }
+        };
+
+        // Optional: Set voice properties for a clearer sound
+        utterance.rate = 1.0; 
+        utterance.volume = 1.0; // The actual speech volume
+        
+        // This command tells the browser to speak the text
+        window.speechSynthesis.speak(utterance);
+    } else {
+        console.warn("Text-to-Speech not supported in this browser.");
+    }
+}
 // --- SCENE RESET HELPER ---
 function resetScene() {
     const sun = document.querySelector('.sun');
