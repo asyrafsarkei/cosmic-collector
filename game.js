@@ -254,13 +254,21 @@ window.animatePrecipitation = function() {
     document.getElementById('cycleStatus').textContent = "The clouds get heavy and water falls as Rain (Precipitation)! 🌧️";
     
     const sun = document.querySelector('.sun'); // Get the sun element
-    const darkCloud = document.getElementById('darkCloud'); // Get the new dark cloud
+    const darkCloud = document.getElementById('darkCloud'); // Get the dark cloud
 
-    // 🔥 NEW: Slide dark cloud over the sun
-    darkCloud.style.transition = 'all 0.5s ease-out';
-    darkCloud.style.opacity = '1';
-    darkCloud.style.top = '10px';    // Move it into the visible area
-    darkCloud.style.left = '10px';
+    // 1. Reset the cloud to its hidden, starting position instantly (no transition)
+    darkCloud.style.transition = 'none'; // Temporarily disable transition
+    darkCloud.style.opacity = '0';
+    darkCloud.style.top = '-100px';    
+    darkCloud.style.left = '-100px';
+    
+    // 2. Schedule the transition and slide-in for the next frame
+    setTimeout(() => {
+        darkCloud.style.transition = 'all 0.5s ease-out'; // Re-enable transition
+        darkCloud.style.opacity = '1';
+        darkCloud.style.top = '10px';    // Move it into the visible area
+        darkCloud.style.left = '10px';   
+    }, 50);
     
     // 1. Define the source clouds (The ones that condensed and grew)
     const sourceClouds = [
@@ -316,7 +324,7 @@ window.animatePrecipitation = function() {
             // Clean up element after animation
             setTimeout(() => { 
                 drop.remove(); 
-                if (i === 14) { // Check if this is the last drop being cleaned up
+                if (i === 34) { // Check if this is the last drop being cleaned up
                      resetScene(); // Call the new reset function
                 }
             }, 2200);
