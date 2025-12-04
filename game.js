@@ -102,8 +102,6 @@ function startGameUI(userData) {
                 <div class="cloud" id="cloudMain" style="opacity:0.3; top: 30px; right: 50px; font-size: 60px;">☁️</div>
                 <div class="cloud" id="cloudSmall1" style="opacity:0.2; top: 80px; left: 150px; font-size: 30px;">☁️</div>
                 <div class="cloud" id="cloudSmall2" style="opacity:0.2; top: 50px; right: 10px; font-size: 40px;">☁️</div>
-                <div id="island"></div>
-                <div id="river"></div>
                 </div>
 
             <div style="text-align:center;">
