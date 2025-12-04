@@ -250,24 +250,63 @@ window.animateCondensation = function() {
 
 window.animatePrecipitation = function() {
     const scene = document.getElementById('waterScene');
-    document.getElementById('cycleStatus').textContent = "The clouds get heavy and water falls as Rain!";
-    
-    // Create falling drops
-    for(let i=0; i<3; i++) {
+    document.getElementById('cycleStatus').textContent = "The clouds get heavy and water falls as Rain (Precipitation)! 🌧️";
+
+    // 1. Define the source clouds (The ones that condensed and grew)
+    const sourceClouds = [
+        document.getElementById('cloudMain'),
+        document.getElementById('cloudCenter'),
+        document.getElementById('cloudCenterC1')
+    ];
+
+    // 2. Loop to create 15 falling drops from various clouds
+    for(let i = 0; i < 15; i++) {
         setTimeout(() => {
+            // Select a random cloud source for this drop
+            const randomCloud = sourceClouds[Math.floor(Math.random() * sourceClouds.length)];
+
+            // Get the current position of the chosen cloud (using its computed style properties)
+            const cloudTop = parseInt(randomCloud.style.top);
+            const cloudLeft = parseInt(randomCloud.style.left) || 0;
+            const cloudRight = parseInt(randomCloud.style.right) || 0;
+            
+            // Determine the drop's horizontal starting point (must be within the cloud's width)
+            // If using 'right', convert it to 'left' relative to the scene container (1004px width)
+            let startLeft;
+            if (cloudRight > 0) {
+                // Approximate left position: Total width - cloud right position - some random offset
+                startLeft = 1004 - cloudRight - (Math.random() * 50); 
+            } else {
+                // If using 'left', use its position + random offset within the cloud
+                startLeft = cloudLeft + (Math.random() * 50); 
+            }
+            
+            // Create the rain drop element
             const drop = document.createElement('div');
             drop.textContent = '💧';
             drop.className = 'water-drop';
-            drop.style.top = '70px';
-            drop.style.right = (80 + (i*20)) + 'px'; // Stagger position
+            drop.style.position = 'absolute';
+            
+            // Set the starting position (just below the cloud)
+            drop.style.top = (cloudTop + 50) + 'px'; // Start 50px below the cloud's top edge
+            drop.style.left = startLeft + 'px';
+            drop.style.fontSize = '20px'; // Make drops more visible
+
             scene.appendChild(drop);
 
+            // 3. Trigger the fall animation
             setTimeout(() => {
-                drop.style.top = '250px'; // Fall down
+                // We calculate the end position based on the PNG image height (617px)
+                // Assuming the ocean/ground starts around the 450px mark of the 617px height
+                drop.style.top = '500px'; // End position near the bottom
+                // Optional: add a slight horizontal drift during the fall
+                drop.style.left = (startLeft + (Math.random() * 20 - 10)) + 'px'; 
             }, 50);
 
+            // Clean up element after animation
             setTimeout(() => { drop.remove(); }, 2000);
-        }, i * 300); // Stagger timing
+
+        }, i * 150); // Stagger timing
     }
 }
 
