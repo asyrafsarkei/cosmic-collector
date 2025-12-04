@@ -380,6 +380,7 @@ function spawnMolecule(event) {
     
     let moleculeHTML;
     let moleculeColor;
+    let moleculeSize = '30px';
 
     if (choice===0) {
         // Water (H₂O)
