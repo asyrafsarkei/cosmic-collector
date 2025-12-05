@@ -206,8 +206,12 @@ function renderQuestion() {
 window.checkAnswer = function(ans, corr) {
     if(ans === corr) { 
         challengeScore++; 
+        modalPhrase = "Correct! Great job, Commander.";
+        speakMolecule(modalPhrase);
         showModal("Correct! Great job, Commander.");
     } else {
+        modalPhrase = "Incorrect. Are we good? Commander.";
+        speakMolecule(modalPhrase);
         showModal(`Incorrect. The correct answer was: ${corr}`);
     }
     
@@ -503,7 +507,7 @@ function spawnMolecule(event) {
 
     scene.appendChild(molecule);
     speakMolecule(moleculePhrase);
-
+    
     // Trigger the animation: move up slightly and fade out
     setTimeout(() => {
         molecule.style.transform = 'translateY(-20px)';
@@ -685,6 +689,9 @@ function startChallengeOne() {
     `;
 
     actionButton.style.display = "none";
+}
+function showModal(message) {
+    alert(message);
 }
 /**
  * Displays the final results, calculates points, and handles data saving.
