@@ -618,6 +618,9 @@ function speakMolecule(textToSpeak) {
 
     if ('speechSynthesis' in window) {
         const utterance = new SpeechSynthesisUtterance(textToSpeak);
+        const voices = window.speechSynthesis.getVoices();
+        const naturalVoice = voices.find(voice => voice.lang.startsWith('en') && !voice.name.toLowerCase().includes('robot'));
+        if (naturalVoice) utterance.voice = naturalVoice;
         
         // 1. Duck the volume when speech starts
         utterance.onstart = () => {
