@@ -111,9 +111,9 @@ function startGameUI(userData) {
                 </div>
 
             <div style="text-align:center;">
-                <button class="cycle-btn" onclick="animateEvaporation()">1. Evaporation 🔥</button>
-                <button class="cycle-btn" onclick="animateCondensation()">2. Condensation ☁️</button>
-                <button class="cycle-btn" onclick="animatePrecipitation()">3. Precipitation 🌧️</button>
+                <button id="evapBtn" class="cycle-btn" onclick="animateEvaporation()">1. Evaporation 🔥</button>
+                <button id="condBtn" class="cycle-btn" onclick="animateCondensation()">2. Condensation ☁️</button>
+                <button id="precipBtn" class="cycle-btn" onclick="animatePrecipitation()">3. Precipitation 🌧️</button>
             </div>
             <div style="text-align:center;">
                  <button id="soundButton" class="cycle-btn" onclick="toggleBackgroundMusic()" style="background-color: #4CAF50;">
@@ -565,19 +565,6 @@ function spawnOxygen(event) {
     setTimeout(() => {
         oxygen.remove();
     }, 1050); 
-}
-function startChallengeOne() {
-    // Update the UI for the actual question
-    challengeContainer.innerHTML = `
-        <div class="challenge-box">
-            <h3>Question 1: Ordering</h3>
-            <p>Put the water cycle stages in order (Evaporation -> Condensation -> Precipitation -> Collection)</p>
-            <p><em>(Drag and Drop Game coming soon...)</em></p>
-        </div>
-    `;
-    
-    // Hide the start button since the game has started
-    actionButton.style.display = "none"; 
 }
 
 // --- AUDIO CONTROL FUNCTIONS ---
