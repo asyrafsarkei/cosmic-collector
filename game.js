@@ -704,10 +704,14 @@ function startChallengeOne() {
 }
 function loadChallengeOneQuestion() {
     const q = challengeOneQuestions[challengeOneIndex];
+    const progress = ((challengeOneIndex) / challengeOneQuestions.length) * 100;
 
     challengeContainer.innerHTML = `
         <div class="challenge-box">
             <h3>Water Cycle Challenge 1</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
             <p><strong>Question ${challengeOneIndex + 1}:</strong> ${q.question}</p>
 
             <div class="answers-grid">
