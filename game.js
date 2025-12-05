@@ -139,9 +139,6 @@ function startGameUI(userData) {
 // ====================================================================
 
 // These variables manage the state of the quiz.
-let challengeScore = 0;
-let currentQIndex = 0;
-let isChallengeActive = false;
 let challengeOneIndex = 0;
 // Define simple questions for the water cycle
 const challengeOneQuestions = [
@@ -189,58 +186,6 @@ window.startChallengeOne = function(button) {
 
     challengeScore = 0;
     currentQIndex = 0;
-    renderQuestion();
-}
-/**
- * Renders the current question to the UI, or finishes the challenge if questions are complete.
- */
-function renderQuestion() {
-    if (!isChallengeActive) return;
-
-    const container = document.getElementById('challengeContainer');
-    if (currentQIndex >= questions.length) {
-        finishChallenge();
-        return;
-    }
-    const q = questions[currentQIndex];
-    
-    let html = `
-        <div class="question-card">
-            <h3 class="text-xl font-bold text-gray-800">Challenge Question ${currentQIndex + 1} of ${questions.length}</h3>
-            <p class="text-lg my-4">${q.text}</p>
-            <div class="flex flex-wrap justify-center challenge-options">
-    `;
-    
-    q.options.forEach(opt => {
-        // Attach checkAnswer function to each button click
-        html += `<button class="challenge-option-btn" onclick="checkAnswer('${opt}', '${q.correct}')">${opt}</button>`;
-    });
-    
-    html += `</div></div>`;
-    container.innerHTML = html;
-}
-/**
- * Checks the user's multiple-choice answer against the correct answer.
- * @param {string} ans - The user's selected answer.
- * @param {string} corr - The correct answer.
- */
-window.checkAnswer = function(ans, corr) {
-    if(ans === corr) { 
-        challengeScore++; 
-        modalPhrase = "Correct! Great job, Commander.";
-        speakMolecule(modalPhrase);
-        showModal("Correct! Great job, Commander.");
-    } else {
-        modalPhrase = "Incorrect. Are we good? Commander.";
-        speakMolecule(modalPhrase);
-        showModal(`Incorrect. The correct answer was: ${corr}`);
-    }
-    
-    // Delay before moving to the next question
-    setTimeout(() => {
-        currentQIndex++;
-        renderQuestion();
-    }, 1000);
 }
 // --- ANIMATION HELPER FUNCTIONS ---
 window.animateEvaporation = function() {
@@ -746,42 +691,4 @@ function answerChallengeOne(answer) {
 }
 function showModal(message) {
     alert(message);
-}
-/**
- * Displays the final results, calculates points, and handles data saving.
- */
-function finishChallenge() {
-    const container = document.getElementById('challengeContainer');
-    isChallengeActive = false;
-    enableCycleButtons(); // Re-enable simulation buttons
-    
-    let message, pointsEarned;
-    // Determine reward based on score
-    if (challengeScore === questions.length) {
-        message = "Perfect Score! Mission Complete! Unlocking next destination...";
-        pointsEarned = EARTH_LEVEL.points;
-        userDataCache.unlockedPlanets.push(EARTH_LEVEL.next);
-        updateUserData({ fuelPoints: userDataCache.fuelPoints + pointsEarned, unlockedPlanets: userDataCache.unlockedPlanets });
-    } else if (challengeScore >= questions.length * 0.7) {
-        message = "Mission Successful! You passed the core concepts.";
-        pointsEarned = Math.floor(EARTH_LEVEL.points * 0.7);
-        updateUserData({ fuelPoints: userDataCache.fuelPoints + pointsEarned });
-    } else {
-        message = "Mission Incomplete. Review the water cycle and try again!";
-        pointsEarned = 0;
-    }
-
-    // Render results to the UI
-    container.innerHTML = `
-        <div class="question-card" style="background:#e8f5e9;">
-            <h2 class="text-2xl font-bold text-green-700">Challenge Results</h2>
-            <p class="text-xl mt-2">Score: ${challengeScore} / ${questions.length}</p>
-            <p class="text-lg font-semibold mt-4">${message}</p>
-            ${pointsEarned > 0 ? `<p class="text-lg text-blue-600 mt-2">Fuel Points Earned: +${pointsEarned}</p>` : ''}
-            <button class="cycle-btn bg-yellow-600 hover:bg-yellow-700 mt-4" onclick="startGameUI(userDataCache)">Back to Mission Map</button>
-        </div>
-    `;
-    // Re-enable the Start Challenge button for replays (if applicable)
-    const challengeBtn = document.querySelector('button[onclick*="startChallengeOne"]');
-    if (challengeBtn) challengeBtn.disabled = false;
 }
