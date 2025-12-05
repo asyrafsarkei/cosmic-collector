@@ -142,13 +142,34 @@ function startGameUI(userData) {
 let challengeScore = 0;
 let currentQIndex = 0;
 let isChallengeActive = false;
+let challengeOneIndex = 0;
 // Define simple questions for the water cycle
-const questions = [
-    { id: 1, text: "The process where liquid water turns into vapor is called:", type: 'mc', correct: 'Evaporation', options: ['Precipitation', 'Condensation', 'Evaporation', 'Collection'] },
-    { id: 2, text: "When water vapor cools and turns back into liquid droplets, forming clouds, this is:", type: 'mc', correct: 'Condensation', options: ['Evaporation', 'Infiltration', 'Condensation'] },
-    { id: 3, text: "The term for water (rain, snow, hail) falling back to Earth is:", type: 'mc', correct: 'Precipitation', options: ['Condensation', 'Transpiration', 'Precipitation'] },
-    { id: 4, text: "What is the primary energy source that drives the water cycle?", type: 'mc', correct: 'The Sun', options: ['The Moon', 'Earth’s Core', 'The Sun'] },
-    { id: 5, text: "Which molecule is the main component of the water cycle?", type: 'mc', correct: 'H2O', options: ['CO2', 'O2', 'H2O'] }
+const challengeOneQuestions = [
+    {
+        question: "What is the first step of the water cycle?",
+        answers: ["Evaporation", "Condensation", "Precipitation", "Collection"],
+        correct: "Evaporation"
+    },
+    {
+        question: "What happens when water vapor cools?",
+        answers: ["Evaporation", "Condensation", "Precipitation", "Runoff"],
+        correct: "Condensation"
+    },
+    {
+        question: "What do we call it when water falls from clouds?",
+        answers: ["Condensation", "Evaporation", "Precipitation", "Collection"],
+        correct: "Precipitation"
+    },
+    {
+        question: "Which step forms clouds?",
+        answers: ["Condensation", "Evaporation", "Infiltration", "Collection"],
+        correct: "Condensation"
+    },
+    {
+        question: "Where does water gather after precipitation?",
+        answers: ["Collection", "Evaporation", "Condensation", "Melting"],
+        correct: "Collection"
+    }
 ];
 function disableCycleButtons() {
     document.querySelectorAll('.cycle-btn').forEach(btn => btn.disabled = true);
@@ -677,18 +698,47 @@ function resetScene() {
 }
 function startChallengeOne() {
     showChallenge("one");
+    challengeOneIndex = 0;
+    loadChallengeOneQuestion();
+    actionButton.style.display = "none";
+}
+function loadChallengeOneQuestion() {
+    const q = challengeOneQuestions[challengeOneIndex];
 
     challengeContainer.innerHTML = `
         <div class="challenge-box">
             <h3>Water Cycle Challenge 1</h3>
-            <p><strong>Question 1:</strong> What is the first step of the water cycle?</p>
-            <button class="answer-btn" onclick="answerQuestion('evaporation')">Evaporation</button>
-            <button class="answer-btn" onclick="answerQuestion('condensation')">Condensation</button>
-            <button class="answer-btn" onclick="answerQuestion('precipitation')">Precipitation</button>
+            <p><strong>Question ${challengeOneIndex + 1}:</strong> ${q.question}</p>
+
+            <div class="answers-grid">
+                ${q.answers.map(a => `
+                    <button class="answer-btn" onclick="answerChallengeOne('${a}')">${a}</button>
+                `).join("")}
+            </div>
         </div>
     `;
+}
+function answerChallengeOne(answer) {
+    const correct = challengeOneQuestions[challengeOneIndex].correct;
 
-    actionButton.style.display = "none";
+    if (answer === correct) {
+        challengeOneIndex++;
+
+        if (challengeOneIndex < challengeOneQuestions.length) {
+            loadChallengeOneQuestion();
+        } else {
+            completePhrase = "Challenge 1 Complete!Great job Commander!";
+            speakMolecule(completePhrase);
+            challengeContainer.innerHTML = `
+                <div class="challenge-box">
+                    <h3>🎉 Challenge 1 Complete!</h3>
+                    <p>Great job!</p>
+                </div>
+            `;
+        }
+    } else {
+        alert("Try again!");
+    }
 }
 function showModal(message) {
     alert(message);
