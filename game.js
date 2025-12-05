@@ -665,6 +665,21 @@ function resetScene() {
         document.getElementById('cycleStatus').textContent = "Cycle step complete. Choose the next step or start the challenge.";
     }, 1000); // Wait 1 second (longer than the blur-out and slide-out)
 }
+function startChallengeOne() {
+    showChallenge("one");
+
+    challengeContainer.innerHTML = `
+        <div class="challenge-box">
+            <h3>Water Cycle Challenge 1</h3>
+            <p><strong>Question 1:</strong> What is the first step of the water cycle?</p>
+            <button class="answer-btn" onclick="answerQuestion('evaporation')">Evaporation</button>
+            <button class="answer-btn" onclick="answerQuestion('condensation')">Condensation</button>
+            <button class="answer-btn" onclick="answerQuestion('precipitation')">Precipitation</button>
+        </div>
+    `;
+
+    actionButton.style.display = "none";
+}
 /**
  * Displays the final results, calculates points, and handles data saving.
  */
