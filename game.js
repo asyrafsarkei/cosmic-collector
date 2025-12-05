@@ -206,11 +206,11 @@ function renderQuestion() {
 window.checkAnswer = function(ans, corr) {
     if(ans === corr) { 
         challengeScore++; 
-        modalPhrase = "Correct! Great job, Commander.";
+        modalPhrase = "Correct Great job Commander.";
         speakMolecule(modalPhrase);
         showModal("Correct! Great job, Commander.");
     } else {
-        modalPhrase = "Incorrect. Are we good? Commander.";
+        modalPhrase = "Incorrect Are we good Commander?";
         speakMolecule(modalPhrase);
         showModal(`Incorrect. The correct answer was: ${corr}`);
     }
@@ -225,7 +225,8 @@ window.checkAnswer = function(ans, corr) {
 window.animateEvaporation = function() {
     const scene = document.getElementById('waterScene');
     document.getElementById('cycleStatus').textContent = "The Sun warms the ocean, turning water into invisible VAPOR (Gas)! Vapor is rising! 💨🔥";
-    
+    animatedPhrase = "The Sun warms the ocean turning water into invisible VAPOR as Gas state and Vapor is rising!";
+    speakMolecule(animatedPhrase);
     // Use a loop to create and animate three "puffs" of vapor
     for(let i = 0; i < 5; i++) {
         setTimeout(() => {
@@ -260,7 +261,8 @@ window.animateEvaporation = function() {
 
 window.animateCondensation = function() {
     document.getElementById('cycleStatus').textContent = "Water vapor cools down high up and CONDENSES into liquid droplets, forming BIGGER CLOUDS! 💧☁️";
-    
+    animatedPhrase = "Water vapor cools down high up and CONDENSES into liquid droplets forming BIGGER CLOUDS!";
+    speakMolecule(animatedPhrase);
     const cloudMain = document.getElementById('cloudMain');
     const cloudSmall1 = document.getElementById('cloudSmall1');
     const cloudSmall2 = document.getElementById('cloudSmall2');
@@ -340,7 +342,8 @@ window.animateCondensation = function() {
 window.animatePrecipitation = function() {
     const scene = document.getElementById('waterScene');
     document.getElementById('cycleStatus').textContent = "The clouds get heavy and water falls as Rain (Precipitation)! 🌧️";
-    
+    animatedPhrase = "The clouds get heavy and water falls as Rain!";
+    speakMolecule(animatedPhrase);
     const sun = document.querySelector('.sun'); // Get the sun element
     const darkCloud = document.getElementById('darkCloud'); // Get the dark cloud
 
