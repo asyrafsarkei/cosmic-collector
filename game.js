@@ -134,7 +134,83 @@ function startGameUI(userData) {
         enableRandomInteractions();
     }
 }
+// ====================================================================
+// 4. CHALLENGE LOGIC
+// ====================================================================
 
+// These variables manage the state of the quiz.
+let challengeScore = 0;
+let currentQIndex = 0;
+let isChallengeActive = false;
+// Define simple questions for the water cycle
+const questions = [
+    { id: 1, text: "The process where liquid water turns into vapor is called:", type: 'mc', correct: 'Evaporation', options: ['Precipitation', 'Condensation', 'Evaporation', 'Collection'] },
+    { id: 2, text: "When water vapor cools and turns back into liquid droplets, forming clouds, this is:", type: 'mc', correct: 'Condensation', options: ['Evaporation', 'Infiltration', 'Condensation'] },
+    { id: 3, text: "The term for water (rain, snow, hail) falling back to Earth is:", type: 'mc', correct: 'Precipitation', options: ['Condensation', 'Transpiration', 'Precipitation'] },
+    { id: 4, text: "What is the primary energy source that drives the water cycle?", type: 'mc', correct: 'The Sun', options: ['The Moon', 'Earth’s Core', 'The Sun'] },
+    { id: 5, text: "Which molecule is the main component of the water cycle?", type: 'mc', correct: 'H2O', options: ['CO2', 'O2', 'H2O'] }
+];
+/**
+ * Initiates the challenge/quiz sequence.
+ * @param {HTMLButtonElement} button - The button element that triggered the function.
+ */
+window.startChallengeOne = function(button) {
+    isChallengeActive = true;
+    // Disable simulation interaction buttons while the quiz is running
+    disableCycleButtons(); 
+    if (button) button.disabled = true;
+
+    challengeScore = 0;
+    currentQIndex = 0;
+    renderQuestion();
+}
+/**
+ * Renders the current question to the UI, or finishes the challenge if questions are complete.
+ */
+function renderQuestion() {
+    if (!isChallengeActive) return;
+
+    const container = document.getElementById('challengeContainer');
+    if (currentQIndex >= questions.length) {
+        finishChallenge();
+        return;
+    }
+    const q = questions[currentQIndex];
+    
+    let html = `
+        <div class="question-card">
+            <h3 class="text-xl font-bold text-gray-800">Challenge Question ${currentQIndex + 1} of ${questions.length}</h3>
+            <p class="text-lg my-4">${q.text}</p>
+            <div class="flex flex-wrap justify-center challenge-options">
+    `;
+    
+    q.options.forEach(opt => {
+        // Attach checkAnswer function to each button click
+        html += `<button class="challenge-option-btn" onclick="checkAnswer('${opt}', '${q.correct}')">${opt}</button>`;
+    });
+    
+    html += `</div></div>`;
+    container.innerHTML = html;
+}
+/**
+ * Checks the user's multiple-choice answer against the correct answer.
+ * @param {string} ans - The user's selected answer.
+ * @param {string} corr - The correct answer.
+ */
+window.checkAnswer = function(ans, corr) {
+    if(ans === corr) { 
+        challengeScore++; 
+        showModal("Correct! Great job, Commander.");
+    } else {
+        showModal(`Incorrect. The correct answer was: ${corr}`);
+    }
+    
+    // Delay before moving to the next question
+    setTimeout(() => {
+        currentQIndex++;
+        renderQuestion();
+    }, 1000);
+}
 // --- ANIMATION HELPER FUNCTIONS ---
 window.animateEvaporation = function() {
     const scene = document.getElementById('waterScene');
@@ -601,4 +677,42 @@ function resetScene() {
         cloudSmall2.style.opacity = '0.2'; 
         document.getElementById('cycleStatus').textContent = "Cycle step complete. Choose the next step or start the challenge.";
     }, 1000); // Wait 1 second (longer than the blur-out and slide-out)
+}
+/**
+ * Displays the final results, calculates points, and handles data saving.
+ */
+function finishChallenge() {
+    const container = document.getElementById('challengeContainer');
+    isChallengeActive = false;
+    enableCycleButtons(); // Re-enable simulation buttons
+    
+    let message, pointsEarned;
+    // Determine reward based on score
+    if (challengeScore === questions.length) {
+        message = "Perfect Score! Mission Complete! Unlocking next destination...";
+        pointsEarned = EARTH_LEVEL.points;
+        userDataCache.unlockedPlanets.push(EARTH_LEVEL.next);
+        updateUserData({ fuelPoints: userDataCache.fuelPoints + pointsEarned, unlockedPlanets: userDataCache.unlockedPlanets });
+    } else if (challengeScore >= questions.length * 0.7) {
+        message = "Mission Successful! You passed the core concepts.";
+        pointsEarned = Math.floor(EARTH_LEVEL.points * 0.7);
+        updateUserData({ fuelPoints: userDataCache.fuelPoints + pointsEarned });
+    } else {
+        message = "Mission Incomplete. Review the water cycle and try again!";
+        pointsEarned = 0;
+    }
+
+    // Render results to the UI
+    container.innerHTML = `
+        <div class="question-card" style="background:#e8f5e9;">
+            <h2 class="text-2xl font-bold text-green-700">Challenge Results</h2>
+            <p class="text-xl mt-2">Score: ${challengeScore} / ${questions.length}</p>
+            <p class="text-lg font-semibold mt-4">${message}</p>
+            ${pointsEarned > 0 ? `<p class="text-lg text-blue-600 mt-2">Fuel Points Earned: +${pointsEarned}</p>` : ''}
+            <button class="cycle-btn bg-yellow-600 hover:bg-yellow-700 mt-4" onclick="startGameUI(userDataCache)">Back to Mission Map</button>
+        </div>
+    `;
+    // Re-enable the Start Challenge button for replays (if applicable)
+    const challengeBtn = document.querySelector('button[onclick*="startChallengeOne"]');
+    if (challengeBtn) challengeBtn.disabled = false;
 }
