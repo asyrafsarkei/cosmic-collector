@@ -150,6 +150,12 @@ const questions = [
     { id: 4, text: "What is the primary energy source that drives the water cycle?", type: 'mc', correct: 'The Sun', options: ['The Moon', 'Earth’s Core', 'The Sun'] },
     { id: 5, text: "Which molecule is the main component of the water cycle?", type: 'mc', correct: 'H2O', options: ['CO2', 'O2', 'H2O'] }
 ];
+function disableCycleButtons() {
+    document.querySelectorAll('.cycle-btn').forEach(btn => btn.disabled = true);
+}
+function enableCycleButtons() {
+    document.querySelectorAll('.cycle-btn').forEach(btn => btn.disabled = false);
+}
 /**
  * Initiates the challenge/quiz sequence.
  * @param {HTMLButtonElement} button - The button element that triggered the function.
